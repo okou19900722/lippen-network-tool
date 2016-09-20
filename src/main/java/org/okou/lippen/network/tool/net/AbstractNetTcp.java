@@ -1,10 +1,10 @@
-package org.okou.lippen.network.tool.ui.net;
+package org.okou.lippen.network.tool.net;
 
 import javax.swing.JOptionPane;
 
 import org.okou.lippen.network.tool.listener.MessageReceivedListener;
 import org.okou.lippen.network.tool.model.DataManager;
-import org.okou.lippen.network.tool.ui.net.handler.ServerHandler;
+import org.okou.lippen.network.tool.net.handler.ServerHandler;
 import org.okou.lippen.network.tool.util.DataFormatUtil;
 
 import io.netty.buffer.ByteBuf;

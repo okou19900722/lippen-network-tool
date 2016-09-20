@@ -1,4 +1,6 @@
-package org.okou.lippen.network.tool.ui.net.handler;
+package org.okou.lippen.network.tool.net.handler;
+
+import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
@@ -28,6 +30,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<ByteBuf>{
 	}
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		if(cause instanceof IOException) {
+			data.removeConnect(ctx.channel());
+			return;
+		}
 		JOptionPane.showMessageDialog(data.getComponent(), "服务器异常", "服务器异常", JOptionPane.OK_OPTION);
 	}
 	@Override

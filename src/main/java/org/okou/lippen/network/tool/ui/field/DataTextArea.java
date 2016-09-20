@@ -44,6 +44,7 @@ public class DataTextArea extends JTextArea {
 				setText(DataFormatUtil.hexToStr(getText(), charset));
 				break;
 			}
+			this.type = type;
 		}
 	}
 	public Charset getCharset() {

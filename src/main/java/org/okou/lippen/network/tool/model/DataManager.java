@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.netty.channel.Channel;
-import io.netty.util.CharsetUtil;
 
 public class DataManager {
 	private List<String> columnNames = new ArrayList<>();
@@ -20,6 +19,7 @@ public class DataManager {
 	private Component component;
 	private DataType readType;
 	private DataType writeType;
+	private Charset charset;
 	public static enum DataType{
 		HEX, STRING
 	}
@@ -39,7 +39,7 @@ public class DataManager {
 			list.add(d);
 		}
 		readType = DataType.STRING;
-		writeType = DataType.HEX;
+		writeType = DataType.STRING;
 	}
 	public void setComponent(Component component){
 		this.component = component;
@@ -117,7 +117,10 @@ public class DataManager {
 		this.writeType = writeType;
 	}
 	public Charset getCharset() {
-		return CharsetUtil.UTF_8;
+		return charset;
+	}
+	public void setCharset(Charset charset) {
+		this.charset = charset;
 	}
 	public int getColumnIndex(String columnName) {
 		return map.get(columnName);

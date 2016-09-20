@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.ui.net;
+package org.okou.lippen.network.tool.net;
 
 import javax.swing.JOptionPane;
 

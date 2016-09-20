@@ -1,8 +1,12 @@
 package org.okou.lippen.network.tool.util;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedMap;
 
 public class DataFormatUtil {
 	private static final String[] BYTE_HEX = new String[256];
@@ -61,8 +65,21 @@ public class DataFormatUtil {
 	public static void main(String[] args) {
 //		byte[] bytes = DataFormatUtil.hexToBytes("0 A 0 b \r \n");
 //		System.out.println(bytesToHex(bytes));
-		String regex = "[0-9|a-f|A-F ]*";
-		String str = "0123456789abcdef ";
-		System.out.println(str.matches(regex));
+		
+		
+//		String regex = "[0-9|a-f|A-F ]*";
+//		String str = "0123456789abcdef ";
+//		System.out.println(str.matches(regex));
+		
+		ByteBuffer buf = ByteBuffer.allocate(4);
+		buf.putInt(151455494);
+		buf.flip();
+		byte[] bytes = buf.array();
+		System.out.println(Arrays.toString(bytes));
+		
+//		SortedMap<String, Charset> map = Charset.availableCharsets();
+//		for (Entry<String, Charset> entry : map.entrySet()) {
+//			System.out.println("{\"" + entry.getKey() + "\", \"" + entry.getValue().name() + "\"},");
+//		}
 	}
 }
