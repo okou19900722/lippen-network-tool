@@ -6,7 +6,6 @@ import org.okou.lippen.network.tool.listener.MessageReceivedListener;
 import org.okou.lippen.network.tool.model.DataManager;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;

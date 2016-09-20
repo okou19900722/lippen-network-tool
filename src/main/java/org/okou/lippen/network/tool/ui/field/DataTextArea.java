@@ -4,6 +4,7 @@ import javax.swing.JTextArea;
 
 import org.okou.lippen.network.tool.model.DataManager.DataType;
 
+@SuppressWarnings("serial")
 public class DataTextArea extends JTextArea {
 	private DataType type;
 	public DataTextArea(DataType type) {

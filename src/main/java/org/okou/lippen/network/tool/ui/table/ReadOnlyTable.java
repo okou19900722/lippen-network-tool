@@ -1,10 +1,5 @@
 package org.okou.lippen.network.tool.ui.table;
 
-import java.awt.event.ActionListener;
-import java.util.List;
-
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;

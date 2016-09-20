@@ -17,7 +17,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class NetTcpServer extends AbstractNetTcp {
 	private ServerBootstrap server;
-	private Channel channel;
 	public NetTcpServer(DataManager data, MessageReceivedListener listener){
 		super(data, listener);
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
