@@ -1,6 +1,7 @@
 package org.okou.lippen.network.tool.model;
 
 import java.awt.Component;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.netty.channel.Channel;
+import io.netty.util.CharsetUtil;
 
 public class DataManager {
 	private List<String> columnNames = new ArrayList<>();
@@ -114,8 +116,8 @@ public class DataManager {
 	public void setWriteType(DataType writeType) {
 		this.writeType = writeType;
 	}
-	public String getCharset() {
-		return "utf-8";
+	public Charset getCharset() {
+		return CharsetUtil.UTF_8;
 	}
 	public int getColumnIndex(String columnName) {
 		return map.get(columnName);

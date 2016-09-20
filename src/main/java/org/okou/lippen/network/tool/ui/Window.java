@@ -24,10 +24,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 
 import org.okou.lippen.network.tool.listener.MessageReceivedListener;
 import org.okou.lippen.network.tool.model.DataManager;
+import org.okou.lippen.network.tool.ui.field.DataTextArea;
 import org.okou.lippen.network.tool.ui.field.JMIPV4AddressField;
 import org.okou.lippen.network.tool.ui.field.NumberField;
 import org.okou.lippen.network.tool.ui.net.INet;
@@ -43,7 +43,7 @@ public class Window extends JFrame {
 	private JButton bindButton;
 	private NumberField portInput;
 	
-	private JTextArea inputArea;
+	private DataTextArea inputArea;
 
 	public Window() {
 		this.setTitle("Lippen Network Tool");
@@ -204,7 +204,7 @@ public class Window extends JFrame {
 		JPanel inPanel = new JPanel();
 		inPanel.setBorder(BorderFactory.createTitledBorder("发送信息"));
 		inPanel.setLayout(new BorderLayout());
-		inputArea = new JTextArea();
+		inputArea = new DataTextArea(data.getWriteType(), data.getCharset());
 		JButton sendButton = new JButton("发送");
 		sendButton.addActionListener((e) -> {
 //			int w = table.getTableHeader().getColumnModel().getColumn(0).getPreferredWidth();
@@ -216,7 +216,7 @@ public class Window extends JFrame {
 			}
 			n.sendMsg(str);
 		});
-		inPanel.add(inputArea, BorderLayout.CENTER);
+		inPanel.add(new JScrollPane(inputArea), BorderLayout.CENTER);
 		inPanel.add(sendButton, BorderLayout.EAST);
 		JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, outPanel, inPanel);
 		splitPanel.setDividerLocation((this.getHeight() >> 2) * 3);

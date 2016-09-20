@@ -58,8 +58,11 @@ public class DataFormatUtil {
 		return result;
 	}
 	
-//	public static void main(String[] args) {
+	public static void main(String[] args) {
 //		byte[] bytes = DataFormatUtil.hexToBytes("0 A 0 b \r \n");
 //		System.out.println(bytesToHex(bytes));
-//	}
+		String regex = "[0-9|a-f|A-F ]*";
+		String str = "0123456789abcdef ";
+		System.out.println(str.matches(regex));
+	}
 }

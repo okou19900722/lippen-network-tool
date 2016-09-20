@@ -1,7 +1,5 @@
 package org.okou.lippen.network.tool.ui.net;
 
-import java.io.UnsupportedEncodingException;
-
 import javax.swing.JOptionPane;
 
 import org.okou.lippen.network.tool.listener.MessageReceivedListener;
@@ -57,13 +55,7 @@ public abstract class AbstractNetTcp implements INet{
 			bytes = DataFormatUtil.hexToBytes(text);
 			break;
 		case STRING:
-			String charset = data.getCharset();
-			try {
-				bytes = text.getBytes(charset);
-			} catch (UnsupportedEncodingException e) {
-				JOptionPane.showMessageDialog(null, "±‡¬Î[" + charset + "]≤ª¥Ê‘⁄", "±‡¬Î“Ï≥£", JOptionPane.OK_OPTION);
-				return null;
-			}
+			bytes = text.getBytes(data.getCharset());
 			break;
 		}
 		return bytes;

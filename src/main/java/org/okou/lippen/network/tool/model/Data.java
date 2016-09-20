@@ -1,7 +1,5 @@
 package org.okou.lippen.network.tool.model;
 
-import java.io.UnsupportedEncodingException;
-
 import org.okou.lippen.network.tool.util.DataFormatUtil;
 
 public class Data {
@@ -20,12 +18,7 @@ public class Data {
 			result = toHexString();
 			break;
 		case STRING:
-			String charset = manager.getCharset();
-			try {
-				result = new String(data, charset);
-			} catch (UnsupportedEncodingException e) {
-				result = "±àÂë[" + charset + "]Òì³£,Êý¾Ý:" + toHexString();
-			}
+			result = new String(data, manager.getCharset());
 			break;
 		}
 		return result;
