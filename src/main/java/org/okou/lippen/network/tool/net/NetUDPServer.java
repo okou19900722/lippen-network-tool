@@ -2,12 +2,14 @@ package org.okou.lippen.network.tool.net;
 
 import java.net.BindException;
 import java.net.InetSocketAddress;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import org.okou.lippen.network.tool.listener.MessageReceivedListener;
 import org.okou.lippen.network.tool.model.DataManager;
 import org.okou.lippen.network.tool.net.handler.UDPHandler;
+import org.okou.lippen.network.tool.ui.select.INetSocketAddressOption;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
@@ -48,15 +50,24 @@ public class NetUDPServer extends AbstractNet {
 	@Override
 	public void sendMsg(String text) {
 		byte[] bytes = msg2Bytes(text);
-		InetSocketAddress address = data.getAddressSource().get();
-		if(address == null) {
-			return;
+		List<Object> connects = data.getConnections();
+		for (Object connect : connects) {
+			if(connect instanceof INetSocketAddressOption) {
+				INetSocketAddressOption net = (INetSocketAddressOption) connect;
+				InetSocketAddress add = net.getAddress();
+				DatagramPacket packet = new DatagramPacket(Unpooled.wrappedBuffer(bytes), add);
+				channel.writeAndFlush(packet);
+			} else {
+				System.err.println("UDP 连接列表里有非UDP连接");
+			}
 		}
-		DatagramPacket packet = new DatagramPacket(Unpooled.wrappedBuffer(bytes), address);
-		channel.writeAndFlush(packet);
 	}
 	@Override
 	public boolean isServer() {
+		return true;
+	}
+	@Override
+	public boolean canRemoveClient() {
 		return true;
 	}
 }

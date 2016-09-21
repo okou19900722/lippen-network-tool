@@ -1,21 +1,19 @@
 package org.okou.lippen.network.tool.ui.model;
 
-import java.util.List;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractListModel;
 import javax.swing.JList;
 
 import org.okou.lippen.network.tool.ui.select.ChannelOption;
-
-import io.netty.channel.Channel;
+import org.okou.lippen.network.tool.ui.select.INetSocketAddressOption;
 
 @SuppressWarnings("serial")
-public class ChannelListModel extends AbstractListModel<ChannelOption>{
-	private List<ChannelOption> channelList = new ArrayList<>();
-	private JList<ChannelOption> list;
-	public ChannelListModel(JList<ChannelOption> list){
+public class ChannelListModel extends AbstractListModel<Object>{
+	private List<Object> channelList = new ArrayList<>();
+	private JList<Object> list;
+	public ChannelListModel(JList<Object> list){
 		this.list = list;
 	}
 	@Override
@@ -24,7 +22,7 @@ public class ChannelListModel extends AbstractListModel<ChannelOption>{
 	}
 
 	@Override
-	public ChannelOption getElementAt(int index) {
+	public Object getElementAt(int index) {
 		return channelList.get(index);
 	}
 	public void add(ChannelOption option){
@@ -32,15 +30,29 @@ public class ChannelListModel extends AbstractListModel<ChannelOption>{
 			return;
 		}
 		channelList.add(option);
+		System.out.println("连接，在线:" + channelList.size());
 		list.repaint();
 		fireIntervalAdded(list, channelList.size() - 1, channelList.size() - 1);
 	}
-	public void remove(ChannelOption option) {
-		remove(option.getChannel());
-	}
-	public void remove(Channel channel) {
-		channelList.remove(channel);
+	public void add(INetSocketAddressOption option){
+		if(channelList.contains(option)) {
+			return;
+		}
+		channelList.add(option);
+		System.out.println("连接，在线:" + channelList.size());
 		list.repaint();
-		fireIntervalAdded(list, channelList.size() - 1, channelList.size() - 1);
+//		fireIntervalAdded(list, channelList.size(), channelList.size());
+	}
+	public void remove(Object option) {
+		boolean b = channelList.remove(option);
+		System.out.println("离开，在线:" + channelList.size());
+		if(b) {
+			list.repaint();
+//			fireIntervalAdded(list, channelList.size(), channelList.size());
+		}
+	}
+	public void clear() {
+		channelList.clear();
+		list.repaint();
 	}
 }

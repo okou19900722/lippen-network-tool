@@ -5,7 +5,6 @@ import org.okou.lippen.network.tool.model.DataManager;
 import org.okou.lippen.network.tool.net.handler.TCPHandler;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;

@@ -5,8 +5,6 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.SortedMap;
 
 public class DataFormatUtil {
 	private static final String[] BYTE_HEX = new String[256];

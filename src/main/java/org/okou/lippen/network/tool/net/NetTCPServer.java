@@ -7,9 +7,9 @@ import javax.swing.JOptionPane;
 
 import org.okou.lippen.network.tool.listener.MessageReceivedListener;
 import org.okou.lippen.network.tool.model.DataManager;
+import org.okou.lippen.network.tool.ui.select.ChannelOption;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -43,11 +43,16 @@ public class NetTCPServer extends AbstractNetTcp {
 	}
 	@Override
 	public void sendMsg(String text) {
-		List<Channel> channels = data.getConnections();
+		List<Object> channels = data.getConnections();
 		byte[] bytes = msg2Bytes(text);
 		if(bytes != null) {
-			for (Channel c : channels) {
-				c.writeAndFlush(bytes);
+			for (Object obj : channels) {
+				if(obj instanceof ChannelOption) {
+					ChannelOption c = (ChannelOption) obj;
+					c.getChannel().writeAndFlush(bytes);
+				} else {
+					System.err.println("TCP 连接列表中有非TCP连接" + obj);
+				}
 			}
 		}
 		
@@ -55,5 +60,9 @@ public class NetTCPServer extends AbstractNetTcp {
 	@Override
 	public boolean isServer() {
 		return true;
+	}
+	@Override
+	public boolean canRemoveClient() {
+		return false;
 	}
 }

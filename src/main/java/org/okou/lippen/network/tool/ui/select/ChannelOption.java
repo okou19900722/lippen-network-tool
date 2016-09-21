@@ -5,7 +5,7 @@ import java.net.SocketAddress;
 
 import io.netty.channel.Channel;
 
-public class ChannelOption {
+public class ChannelOption extends AbstractOption{
 	private Channel channel;
 	public ChannelOption(Channel channel) {
 		super();
@@ -28,9 +28,5 @@ public class ChannelOption {
 			return add.getHostString() + ":" + add.getPort();
 		}
 		return address.toString();
-	}
-	@Override
-	public boolean equals(Object obj) {
-		return channel.equals(obj);
 	}
 }

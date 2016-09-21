@@ -5,4 +5,5 @@ public interface INet {
 	public boolean stop();
 	public void sendMsg(String text);
 	public boolean isServer();
+	public boolean canRemoveClient();
 }

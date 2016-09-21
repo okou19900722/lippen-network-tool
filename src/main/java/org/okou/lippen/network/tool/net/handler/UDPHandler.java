@@ -1,7 +1,5 @@
 package org.okou.lippen.network.tool.net.handler;
 
-import java.io.IOException;
-
 import javax.swing.JOptionPane;
 
 import org.okou.lippen.network.tool.listener.MessageReceivedListener;
@@ -23,7 +21,7 @@ public class UDPHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 	}
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket msg) throws Exception {
-		data.addConnect(ctx.channel());
+		data.addConnect(msg.sender());
 		ByteBuf buf = msg.copy().content();
 		byte[] data = new byte[buf.readableBytes()];
 		buf.readBytes(data);
@@ -31,10 +29,6 @@ public class UDPHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 	}
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		if(cause instanceof IOException) {
-			data.removeConnect(ctx.channel());
-			return;
-		}
 		JOptionPane.showMessageDialog(data.getComponent(), "服务器异常", "服务器异常", JOptionPane.OK_OPTION);
 	}
 }

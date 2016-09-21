@@ -5,7 +5,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
-import java.net.InetSocketAddress;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.nio.charset.Charset;
 
 import javax.swing.BorderFactory;
@@ -18,12 +20,12 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 
 import org.okou.lippen.network.tool.model.DataManager;
 import org.okou.lippen.network.tool.model.DataManager.DataType;
@@ -33,7 +35,6 @@ import org.okou.lippen.network.tool.ui.field.IPV4Field;
 import org.okou.lippen.network.tool.ui.field.PortField;
 import org.okou.lippen.network.tool.ui.menu.CharsetCheckBoxMenuItem;
 import org.okou.lippen.network.tool.ui.model.ChannelListModel;
-import org.okou.lippen.network.tool.ui.select.ChannelOption;
 import org.okou.lippen.network.tool.ui.select.NetSelect;
 import org.okou.lippen.network.tool.ui.table.ReadOnlyTable;
 import org.okou.lippen.network.tool.util.NetUtil;
@@ -74,6 +75,8 @@ public class Window extends JFrame {
 	private JCheckBox readHex;
 	//发送信息框显示格式
 	private JCheckBox writeHex;
+	//发送完信息之后清空
+	private JCheckBox writeClear;
 	
 	//绑定按钮
 	private JButton bindButton;
@@ -87,23 +90,32 @@ public class Window extends JFrame {
 	//目标ip和端口输入框
 	private IPV4Field targetIp;
 	private PortField targetPort;
+	
+	private JPanel connectPanel;
+	private JList<Object> connectList;
+	private JPopupMenu popup;
 
-	private JList<ChannelOption> connectList;
 	
 	private ActionListener listener;
 
 	private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+	private Dimension min = new Dimension(590, 590);
+	private Dimension max = new Dimension(710, 590);
 	public Window() {
 		this.setTitle("Lippen Network Tool");
 		this.setLayout(new BorderLayout());
-		this.setSize(690, 590);
-		this.setMinimumSize(new Dimension(690, 590));
+		this.setSize(min);
 		initComponent();
 		addListener();
 		initMenu();
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
+	}
+	
+	public void setSize(Dimension d){
+		this.setMinimumSize(d);
+		super.setSize(d);
 	}
 
 	private void initMenu() {
@@ -161,6 +173,7 @@ public class Window extends JFrame {
 		readHex = new JCheckBox("十六进制显示");
 		
 		writeHex = new JCheckBox("十六进制显示");
+		writeClear = new JCheckBox("发送完自动清空");
 		
 		table = new ReadOnlyTable(data);
 		JScrollPane tableScroll = new JScrollPane(table);
@@ -224,8 +237,9 @@ public class Window extends JFrame {
 
 		JPanel writeSettingPanel = new JPanel();
 		writeSettingPanel.setBorder(BorderFactory.createTitledBorder("发送设置"));
-		writeSettingPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		writeSettingPanel.setLayout(new BoxLayout(writeSettingPanel, BoxLayout.Y_AXIS));
 		writeSettingPanel.add(writeHex);
+		writeSettingPanel.add(writeClear);
 		
 		//左半边面板
 		JPanel leftPanel = new JPanel();
@@ -244,25 +258,41 @@ public class Window extends JFrame {
 		this.add(splitPanel, BorderLayout.CENTER);
 		
 		
-		JPanel panel = new JPanel();
-		panel.setBorder(BorderFactory.createTitledBorder("连接列表"));
-		panel.setLayout(new GridLayout(1, 1));
+		connectPanel = new JPanel();
+		connectPanel.setBorder(BorderFactory.createTitledBorder("连接列表"));
+		connectPanel.setLayout(new GridLayout(1, 1));
 		
+		popup = new JPopupMenu();
+		JMenuItem removeItem = new JMenuItem("删除");
+		JMenuItem clearItem = new JMenuItem("清空");
+		removeItem.addActionListener((e) -> {
+			Object obj = connectList.getSelectedValue();
+			data.removeConnect(obj);
+			
+		});
+		clearItem.addActionListener((e) -> {
+			data.clear();
+		});
+		popup.add(removeItem);
+		popup.add(clearItem);
 		JScrollPane listScroll = new JScrollPane(connectList);
-		listScroll.setPreferredSize(new Dimension(100, 100));
-		panel.add(listScroll);
-		this.add(panel, BorderLayout.EAST);
+		Dimension old = listScroll.getPreferredSize();
+		listScroll.setPreferredSize(new Dimension(108, old.height));
+		connectPanel.add(listScroll);
 	}
 	
 	public void addListener(){
-		data.setAddressSource(() -> {
-			String udpIP = targetIp.getText();
-			if(udpIP == null) {
-				JOptionPane.showMessageDialog(null, "UDP客户端信息未配置", "UDP", JOptionPane.OK_OPTION);
-				return null;
-			}
-			int udpPort = this.targetPort.getNumber();
-			return new InetSocketAddress(udpIP, udpPort);
+		MouseListener mouseListener = new MouseAdapter() {  
+		    @Override  
+		    public void mouseClicked(MouseEvent e) {  
+		        int index = connectList.locationToIndex(e.getPoint());  
+		        connectList.setSelectedIndex(index);  
+		    }  
+		};  
+		connectList.addMouseListener(mouseListener);
+		
+		data.setChannelSource(() -> {
+			return connectList.getSelectedValuesList();
 		});
 		sendButton.addActionListener((e) -> {
 			String str = writeArea.getText();
@@ -271,6 +301,9 @@ public class Window extends JFrame {
 				return;
 			}
 			n.sendMsg(str);
+			if(writeClear.isSelected()) {
+				writeArea.setText("");
+			}
 		});
 		networkSelect.addActionListener((e) -> {
 			INet option = networkSelect.getItemAt(networkSelect.getSelectedIndex());
@@ -289,8 +322,16 @@ public class Window extends JFrame {
 			if(n == null) {
 				return;
 			}
+			Dimension d = null;
 			if(bindButton.getText().equals("连接")) {
 				if(n.start(ipStr, port)){
+					if(n.isServer()) {
+						d = max;
+						this.add(connectPanel, BorderLayout.EAST);
+						if(n.canRemoveClient()) {
+							this.connectList.setComponentPopupMenu(popup);
+						}
+					}
 					bindButton.setText("断开");
 					networkSelect.setEnabled(false);
 					ipInput.setEnabled(false);
@@ -298,11 +339,22 @@ public class Window extends JFrame {
 				}
 			} else {
 				if(n.stop()) {
+					if(n.isServer()) {
+						if(n.canRemoveClient()) {
+							this.connectList.setComponentPopupMenu(null);
+						}
+						d = min;
+						this.remove(connectPanel);
+					}
 					bindButton.setText("连接");
 					networkSelect.setEnabled(true);
 					ipInput.setEnabled(true);
 					portInput.setEnabled(true);
+					data.clear();
 				}
+			}
+			if(d != null) {
+				this.setSize(d);
 			}
 		});
 		readHex.addActionListener((e) -> {

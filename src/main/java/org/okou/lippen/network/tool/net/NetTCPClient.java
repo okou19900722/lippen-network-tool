@@ -48,4 +48,8 @@ public class NetTCPClient extends AbstractNetTcp {
 	public boolean isServer() {
 		return false;
 	}
+	@Override
+	public boolean canRemoveClient() {
+		return false;
+	}
 }

@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 
 import org.okou.lippen.network.tool.ui.model.ChannelListModel;
 import org.okou.lippen.network.tool.ui.select.ChannelOption;
+import org.okou.lippen.network.tool.ui.select.INetSocketAddressOption;
 
 import io.netty.channel.Channel;
 
@@ -25,13 +26,12 @@ public class DataManager {
 	private DataType readType;
 	private DataType writeType;
 	private Charset charset;
+	private Supplier<List<Object>> channelSource;
 	
-	private Supplier<InetSocketAddress> addressSource;
 	public static enum DataType{
 		HEX, STRING
 	}
 	
-	private List<Channel> channels = new ArrayList<>();
 	private ChannelListModel channelListModel;
 	
 	public DataManager(Object[][] data, Object[] columnNames){
@@ -102,16 +102,13 @@ public class DataManager {
 		}
 	}
 	public void addConnect(Channel channel){
-		if(!channels.contains(channel)) {
-			channels.add(channel);
-			channelListModel.add(new ChannelOption(channel));
-		}
-		System.out.println("连接，在线:" + channels.size());
+		channelListModel.add(new ChannelOption(channel));
 	}
-	public void removeConnect(Channel channel){
-		channels.remove(channel);
+	public void addConnect(InetSocketAddress address) {
+		channelListModel.add(new INetSocketAddressOption(address));
+	}
+	public void removeConnect(Object channel){
 		channelListModel.remove(channel);
-		System.out.println("离开，在线:" + channels.size());
 	}
 	public Component getComponent() {
 		return component;
@@ -140,19 +137,19 @@ public class DataManager {
 	public void removeIndex(Integer index) {
 		showIndex.remove(index);
 	}
-	public List<Channel> getConnections(){
-		return channels;
-	}
-	public Supplier<InetSocketAddress> getAddressSource() {
-		return addressSource;
-	}
-	public void setAddressSource(Supplier<InetSocketAddress> addressSource) {
-		this.addressSource = addressSource;
+	public List<Object> getConnections(){
+		return channelSource.get();
 	}
 	public ChannelListModel getChannelListModel() {
 		return channelListModel;
 	}
 	public void setChannelListModel(ChannelListModel channelListModel) {
 		this.channelListModel = channelListModel;
+	}
+	public void clear() {
+		channelListModel.clear();
+	}
+	public void setChannelSource(Supplier<List<Object>> channelSource) {
+		this.channelSource = channelSource;
 	}
 }
