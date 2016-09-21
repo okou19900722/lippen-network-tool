@@ -1,11 +1,8 @@
 package org.okou.lippen.network.tool.net;
 
-import javax.swing.JOptionPane;
-
 import org.okou.lippen.network.tool.listener.MessageReceivedListener;
 import org.okou.lippen.network.tool.model.DataManager;
-import org.okou.lippen.network.tool.net.handler.ServerHandler;
-import org.okou.lippen.network.tool.util.DataFormatUtil;
+import org.okou.lippen.network.tool.net.handler.TCPHandler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -15,11 +12,10 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.MessageToByteEncoder;
 
-public abstract class AbstractNetTcp implements INet{
-	protected DataManager data;
+public abstract class AbstractNetTcp extends AbstractNet{
 	protected ChannelHandler initializer;
-	protected Channel channel;
-	protected AbstractNetTcp(DataManager data, MessageReceivedListener listener){
+	protected AbstractNetTcp(DataManager data, MessageReceivedListener listener, String netName){
+		super(data, netName);
 		initializer = new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
@@ -29,35 +25,9 @@ public abstract class AbstractNetTcp implements INet{
 						out.writeBytes(msg);
 					}
 				});
-				ch.pipeline().addLast("handler", new ServerHandler(data, listener));
+				ch.pipeline().addLast("handler", new TCPHandler(data, listener));
 			}
 		};
 		this.data = data;
-	}
-	@Override
-	public boolean stop() {
-		if(channel == null) {
-			return true;
-		}
-		try {
-			channel.close().sync();
-		} catch (InterruptedException e) {
-			JOptionPane.showMessageDialog(null, "ֹͣ�쳣", "ֹͣ�쳣", JOptionPane.OK_OPTION);
-			return false;
-		}
-		channel = null;
-		return true;
-	}
-	protected byte[] msg2Bytes(String text) {
-		byte[] bytes = null;
-		switch(data.getWriteType()) {
-		case HEX:
-			bytes = DataFormatUtil.hexToBytes(text);
-			break;
-		case STRING:
-			bytes = text.getBytes(data.getCharset());
-			break;
-		}
-		return bytes;
 	}
 }

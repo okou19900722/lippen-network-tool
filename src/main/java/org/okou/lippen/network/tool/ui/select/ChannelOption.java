@@ -22,9 +22,10 @@ public class ChannelOption {
 	@Override
 	public String toString() {
 		SocketAddress address = channel.remoteAddress();
+		address = address == null ? channel.localAddress() : address; 
 		if(address instanceof InetSocketAddress) {
 			InetSocketAddress add = (InetSocketAddress) address;
-			return add.getHostName() + ":" + add.getPort();
+			return add.getHostString() + ":" + add.getPort();
 		}
 		return address.toString();
 	}

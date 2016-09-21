@@ -11,10 +11,10 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
-public class NetTcpClient extends AbstractNetTcp {
+public class NetTCPClient extends AbstractNetTcp {
 	private Bootstrap client;
-	public NetTcpClient(DataManager data, MessageReceivedListener listener){
-		super(data, listener);
+	public NetTCPClient(DataManager data, MessageReceivedListener listener){
+		super(data, listener, "TCP Client");
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		client = new Bootstrap();
 		client.group(bossGroup);
@@ -43,5 +43,9 @@ public class NetTcpClient extends AbstractNetTcp {
 		if(bytes != null) {
 			channel.writeAndFlush(bytes);
 		}
+	}
+	@Override
+	public boolean isServer() {
+		return false;
 	}
 }

@@ -11,10 +11,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-public class ServerHandler extends SimpleChannelInboundHandler<ByteBuf>{
+public class TCPHandler extends SimpleChannelInboundHandler<ByteBuf>{
 	private DataManager data;
 	private MessageReceivedListener listener;
-	public ServerHandler(DataManager data, MessageReceivedListener listener){
+	public TCPHandler(DataManager data, MessageReceivedListener listener){
 		this.data = data;
 		this.listener = listener;
 	}

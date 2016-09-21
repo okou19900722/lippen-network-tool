@@ -1,6 +1,7 @@
 package org.okou.lippen.network.tool.model;
 
 import java.awt.Component;
+import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,6 +9,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
+
+import org.okou.lippen.network.tool.ui.model.ChannelListModel;
+import org.okou.lippen.network.tool.ui.select.ChannelOption;
 
 import io.netty.channel.Channel;
 
@@ -20,11 +25,14 @@ public class DataManager {
 	private DataType readType;
 	private DataType writeType;
 	private Charset charset;
+	
+	private Supplier<InetSocketAddress> addressSource;
 	public static enum DataType{
 		HEX, STRING
 	}
 	
 	private List<Channel> channels = new ArrayList<>();
+	private ChannelListModel channelListModel;
 	
 	public DataManager(Object[][] data, Object[] columnNames){
 		int i = 0;
@@ -94,11 +102,15 @@ public class DataManager {
 		}
 	}
 	public void addConnect(Channel channel){
-		channels.add(channel);
+		if(!channels.contains(channel)) {
+			channels.add(channel);
+			channelListModel.add(new ChannelOption(channel));
+		}
 		System.out.println("连接，在线:" + channels.size());
 	}
 	public void removeConnect(Channel channel){
 		channels.remove(channel);
+		channelListModel.remove(channel);
 		System.out.println("离开，在线:" + channels.size());
 	}
 	public Component getComponent() {
@@ -130,5 +142,17 @@ public class DataManager {
 	}
 	public List<Channel> getConnections(){
 		return channels;
+	}
+	public Supplier<InetSocketAddress> getAddressSource() {
+		return addressSource;
+	}
+	public void setAddressSource(Supplier<InetSocketAddress> addressSource) {
+		this.addressSource = addressSource;
+	}
+	public ChannelListModel getChannelListModel() {
+		return channelListModel;
+	}
+	public void setChannelListModel(ChannelListModel channelListModel) {
+		this.channelListModel = channelListModel;
 	}
 }

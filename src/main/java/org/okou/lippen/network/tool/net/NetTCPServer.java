@@ -15,10 +15,10 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class NetTcpServer extends AbstractNetTcp {
+public class NetTCPServer extends AbstractNetTcp {
 	private ServerBootstrap server;
-	public NetTcpServer(DataManager data, MessageReceivedListener listener){
-		super(data, listener);
+	public NetTCPServer(DataManager data, MessageReceivedListener listener){
+		super(data, listener, "TCP Server");
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workGroup = new NioEventLoopGroup();
 		server = new ServerBootstrap();
@@ -51,5 +51,9 @@ public class NetTcpServer extends AbstractNetTcp {
 			}
 		}
 		
+	}
+	@Override
+	public boolean isServer() {
+		return true;
 	}
 }

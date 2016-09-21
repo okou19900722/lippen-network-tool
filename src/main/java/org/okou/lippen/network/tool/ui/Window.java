@@ -5,21 +5,17 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
@@ -27,22 +23,24 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
-import org.okou.lippen.network.tool.listener.MessageReceivedListener;
 import org.okou.lippen.network.tool.model.DataManager;
 import org.okou.lippen.network.tool.model.DataManager.DataType;
 import org.okou.lippen.network.tool.net.INet;
-import org.okou.lippen.network.tool.net.NetTcpClient;
-import org.okou.lippen.network.tool.net.NetTcpServer;
 import org.okou.lippen.network.tool.ui.field.DataTextArea;
-import org.okou.lippen.network.tool.ui.field.JMIPV4AddressField;
-import org.okou.lippen.network.tool.ui.field.NumberField;
+import org.okou.lippen.network.tool.ui.field.IPV4Field;
+import org.okou.lippen.network.tool.ui.field.PortField;
 import org.okou.lippen.network.tool.ui.menu.CharsetCheckBoxMenuItem;
-import org.okou.lippen.network.tool.ui.select.NetOption;
+import org.okou.lippen.network.tool.ui.model.ChannelListModel;
+import org.okou.lippen.network.tool.ui.select.ChannelOption;
+import org.okou.lippen.network.tool.ui.select.NetSelect;
 import org.okou.lippen.network.tool.ui.table.ReadOnlyTable;
+import org.okou.lippen.network.tool.util.NetUtil;
 
 @SuppressWarnings("serial")
 public class Window extends JFrame {
+	//编码格式
 	private static final String[][] charsets = new String[][] {
 		{"ISO-8859-1", "ISO-8859-1"},
 		{"UTF-8", "UTF-8"},
@@ -58,12 +56,39 @@ public class Window extends JFrame {
 		{"UTF-32BE", "UTF-32BE"},
 		{"UTF-32LE", "UTF-32LE"},
 	};
+	//本地ip
+	private static final String LOCAL_IP = NetUtil.getLocalHostName();
+	
+	//数据中心
+	private DataManager data;
+	//网络类型选择框
+	private NetSelect networkSelect;
+	//ip和端口显示面板
 	private JLabel ipLabel;
 	private JLabel portLabel;
-	private JButton bindButton;
-	private NumberField portInput;
+	//ip和端口输入框
+	private IPV4Field ipInput;
+	private PortField portInput;
 	
-	private DataTextArea inputArea;
+	//接收信息列表显示格式
+	private JCheckBox readHex;
+	//发送信息框显示格式
+	private JCheckBox writeHex;
+	
+	//绑定按钮
+	private JButton bindButton;
+	//消息发送按钮
+	private JButton sendButton;
+	//消息输入框
+	private DataTextArea writeArea;
+	//接收消息显示框
+	private JTable table;
+	
+	//目标ip和端口输入框
+	private IPV4Field targetIp;
+	private PortField targetPort;
+
+	private JList<ChannelOption> connectList;
 	
 	private ActionListener listener;
 
@@ -71,10 +96,12 @@ public class Window extends JFrame {
 	public Window() {
 		this.setTitle("Lippen Network Tool");
 		this.setLayout(new BorderLayout());
-		this.setSize(590, 590);
-		this.setMinimumSize(new Dimension(590, 590));
-		initPanel();
+		this.setSize(690, 590);
+		this.setMinimumSize(new Dimension(690, 590));
+		initComponent();
+		addListener();
 		initMenu();
+		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
@@ -109,25 +136,145 @@ public class Window extends JFrame {
 		this.setJMenuBar(menuBar);
 	}
 
-	private void initPanel() {
+	private void initComponent() {
+		//初始化数据中心
 		Object[] columnNames = new Object[]{"时间", "数据"};
 		Object[][] rowData = new Object[][]{};
-		DataManager data = new DataManager(rowData, columnNames); 
+		data = new DataManager(rowData, columnNames); 
 		data.setCharset(DEFAULT_CHARSET);
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-
-		JPanel optionPanel = new JPanel();
-		optionPanel.setBorder(BorderFactory.createTitledBorder("网络设置"));
-		optionPanel.setLayout(new GridLayout(7, 1));
+		
+		//-------------初始化控件-------------
 		JLabel networkTypeLabel = new JLabel("（1）协议类型");
-		JComboBox<NetOption> networkSelect = new JComboBox<>();
-		networkSelect.addItem(new NetOption("TCP server", 0));
-		networkSelect.addItem(new NetOption("TCP client", 1));
-		networkSelect.addItem(new NetOption("UDP", 2));
+		//网络类型选择框
+		networkSelect = new NetSelect(data);
+		
+		ipLabel = new JLabel("（2）本地ip地址");
+		//ip地址输入框
+		ipInput = new IPV4Field(LOCAL_IP);
+		
+		portLabel = new JLabel("（3）本地端口");
+		//端口输入框
+		portInput = new PortField(8080);
+		
+		bindButton = new JButton("连接");
+		
+		readHex = new JCheckBox("十六进制显示");
+		
+		writeHex = new JCheckBox("十六进制显示");
+		
+		table = new ReadOnlyTable(data);
+		JScrollPane tableScroll = new JScrollPane(table);
+		
+		JLabel targetHost = new JLabel("目标主机");
+		targetIp = new IPV4Field(LOCAL_IP);
+		JLabel targetPortLabel = new JLabel("目标端口");
+		targetPort = new PortField(7000);
+		
+		//消息发送框
+		writeArea = new DataTextArea(data.getWriteType(), data.getCharset());
+		sendButton = new JButton("发送");
+		
+		connectList = new JList<>();
+		ChannelListModel model = new ChannelListModel(connectList);
+		connectList.setModel(model);
+		data.setChannelListModel(model);
+		
+		JPanel targetPanel = new JPanel();
+//		targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
+		targetPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		targetPanel.add(targetHost);
+		targetPanel.add(targetIp);
+		targetPanel.add(targetPortLabel);
+		targetPanel.add(targetPort);
+		
+		JPanel writePanel = new JPanel();
+		writePanel.setBorder(BorderFactory.createTitledBorder("发送信息"));
+		writePanel.setLayout(new BorderLayout());
+		writePanel.add(new JScrollPane(writeArea), BorderLayout.CENTER);
+		writePanel.add(sendButton, BorderLayout.EAST);
+		
+		JPanel readPanel = new JPanel();
+		readPanel.setBorder(BorderFactory.createTitledBorder("接收信息"));
+		readPanel.setLayout(new BoxLayout(readPanel, BoxLayout.Y_AXIS));
+		readPanel.add(tableScroll);
+		readPanel.add(targetPanel);
+		
+		//网络设置面板
+		JPanel netSettingPanel = new JPanel();
+		netSettingPanel.setBorder(BorderFactory.createTitledBorder("网络设置"));
+		netSettingPanel.setLayout(new GridLayout(7, 1));
+		netSettingPanel.add(networkTypeLabel);
+		netSettingPanel.add(networkSelect);
+		netSettingPanel.add(ipLabel);
+		netSettingPanel.add(ipInput);
+		netSettingPanel.add(portLabel);
+		netSettingPanel.add(portInput);
+		netSettingPanel.add(bindButton);
+		
+		JPanel readSettingPanel = new JPanel();
+		readSettingPanel.setBorder(BorderFactory.createTitledBorder("接收设置"));
+		readSettingPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		readSettingPanel.add(readHex);
+		
+		
+		JPanel leftUpPanel = new JPanel();
+		leftUpPanel.setLayout(new BoxLayout(leftUpPanel, BoxLayout.Y_AXIS));
+		leftUpPanel.add(netSettingPanel);
+		leftUpPanel.add(readSettingPanel);
+
+		JPanel writeSettingPanel = new JPanel();
+		writeSettingPanel.setBorder(BorderFactory.createTitledBorder("发送设置"));
+		writeSettingPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		writeSettingPanel.add(writeHex);
+		
+		//左半边面板
+		JPanel leftPanel = new JPanel();
+		//设置布局为BorderLayout，这样在调节窗口大小时，顶部不变，底部不变，中间为空白变化
+		leftPanel.setLayout(new BorderLayout());
+		leftPanel.add(leftUpPanel, BorderLayout.NORTH);
+		leftPanel.add(writeSettingPanel, BorderLayout.SOUTH);
+		//右边面板
+		JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, readPanel, writePanel);
+		//显示分隔面板在3/4位置
+		splitPanel.setDividerLocation((this.getHeight() >> 2) * 3);
+		//取消边框
+		splitPanel.setBorder(null);
+		
+		this.add(leftPanel, BorderLayout.WEST);
+		this.add(splitPanel, BorderLayout.CENTER);
+		
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(BorderFactory.createTitledBorder("连接列表"));
+		panel.setLayout(new GridLayout(1, 1));
+		
+		JScrollPane listScroll = new JScrollPane(connectList);
+		listScroll.setPreferredSize(new Dimension(100, 100));
+		panel.add(listScroll);
+		this.add(panel, BorderLayout.EAST);
+	}
+	
+	public void addListener(){
+		data.setAddressSource(() -> {
+			String udpIP = targetIp.getText();
+			if(udpIP == null) {
+				JOptionPane.showMessageDialog(null, "UDP客户端信息未配置", "UDP", JOptionPane.OK_OPTION);
+				return null;
+			}
+			int udpPort = this.targetPort.getNumber();
+			return new InetSocketAddress(udpIP, udpPort);
+		});
+		sendButton.addActionListener((e) -> {
+			String str = writeArea.getText();
+			INet n = networkSelect.getSelectedItem();
+			if(n == null) {
+				return;
+			}
+			n.sendMsg(str);
+		});
 		networkSelect.addActionListener((e) -> {
-			NetOption option = networkSelect.getItemAt(networkSelect.getSelectedIndex());
-			if (option.getIndex() == 1) {
+			INet option = networkSelect.getItemAt(networkSelect.getSelectedIndex());
+			if (!option.isServer()) {
 				ipLabel.setText("（2）服务器IP地址");
 				portLabel.setText("（3）服务器端口");
 			} else {
@@ -135,38 +282,10 @@ public class Window extends JFrame {
 				portLabel.setText("（3）本地端口");
 			}
 		});
-		ipLabel = new JLabel("（2）本地ip地址");
-		String ip = null;
-		try {
-			InetAddress address = InetAddress.getLocalHost();
-			ip = address.getHostAddress();
-		} catch (UnknownHostException e) {
-		}
-		JMIPV4AddressField ipInput = new JMIPV4AddressField(ip);
-		portLabel = new JLabel("（3）本地端口");
-		portInput = new NumberField(8080);
-		bindButton = new JButton("连接");
-		MessageReceivedListener messageReceived = (bytes) -> {
-			data.addMessage(bytes);;
-		};
-		List<INet> netList = new ArrayList<>();
-		netList.add(new NetTcpServer(data, messageReceived));
-		netList.add(new NetTcpClient(data, messageReceived));
-
-		Supplier<INet> fun = () -> {
-			NetOption option = networkSelect.getItemAt(networkSelect.getSelectedIndex());
-			int i = option.getIndex();
-			if(i >= netList.size()) {
-				JOptionPane.showMessageDialog(null, option.getValue() + "功能未实现");
-				return null;
-			}
-			INet n = netList.get(i);
-			return n;
-		};
 		bindButton.addActionListener((e) -> {
 			String ipStr = ipInput.getText();
 			int port = portInput.getNumber();
-			INet n = fun.get();
+			INet n = networkSelect.getSelectedItem();
 			if(n == null) {
 				return;
 			}
@@ -186,79 +305,21 @@ public class Window extends JFrame {
 				}
 			}
 		});
-		optionPanel.add(networkTypeLabel);
-		optionPanel.add(networkSelect);
-		optionPanel.add(ipLabel);
-		optionPanel.add(ipInput);
-		optionPanel.add(portLabel);
-		optionPanel.add(portInput);
-		optionPanel.add(bindButton);
-
-		JPanel outOptionPanel = new JPanel();
-		outOptionPanel.setBorder(BorderFactory.createTitledBorder("接收设置"));
-		outOptionPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		JCheckBox box = new JCheckBox("十六进制显示");
-		outOptionPanel.add(box);
-		JPanel inOptionPanel = new JPanel();
-		inOptionPanel.setBorder(BorderFactory.createTitledBorder("发送设置"));
-		inOptionPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		JCheckBox box2 = new JCheckBox("十六进制显示");
-		inOptionPanel.add(box2);
-
-		
-		JPanel leftUpPanel = new JPanel();
-		leftUpPanel.setLayout(new BoxLayout(leftUpPanel, BoxLayout.Y_AXIS));
-		leftUpPanel.add(optionPanel);
-		leftUpPanel.add(outOptionPanel);
-		panel.add(leftUpPanel, BorderLayout.NORTH);
-		panel.add(inOptionPanel, BorderLayout.SOUTH);
-
-		JPanel outPanel = new JPanel();
-		outPanel.setBorder(BorderFactory.createTitledBorder("接收信息"));
-		outPanel.setLayout(new GridLayout(1, 1));
-		JTable table = new ReadOnlyTable(data);
-		JScrollPane scrollPane = new JScrollPane(table);
-		table.setFillsViewportHeight(true);
-		outPanel.add(scrollPane);
-		JPanel inPanel = new JPanel();
-		inPanel.setBorder(BorderFactory.createTitledBorder("发送信息"));
-		inPanel.setLayout(new BorderLayout());
-		inputArea = new DataTextArea(data.getWriteType(), data.getCharset());
-		JButton sendButton = new JButton("发送");
-		sendButton.addActionListener((e) -> {
-//			int w = table.getTableHeader().getColumnModel().getColumn(0).getPreferredWidth();
-//			System.out.println(w);
-			String str = inputArea.getText();
-			INet n = fun.get();
-			if(n == null) {
-				return;
-			}
-			n.sendMsg(str);
-		});
-		inPanel.add(new JScrollPane(inputArea), BorderLayout.CENTER);
-		inPanel.add(sendButton, BorderLayout.EAST);
-		JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, outPanel, inPanel);
-		splitPanel.setDividerLocation((this.getHeight() >> 2) * 3);
-		splitPanel.setBorder(null);
-
-		this.add(panel, BorderLayout.WEST);
-		this.add(splitPanel, BorderLayout.CENTER);
-		
-		box.addActionListener((e) -> {
-			if(box.isSelected()) {
+		readHex.addActionListener((e) -> {
+			if(readHex.isSelected()) {
 				data.setReadType(DataType.HEX);
 			} else {
 				data.setReadType(DataType.STRING);
 			}
 			table.repaint();
 		});
-		box2.addActionListener((e) -> {
-			if(box2.isSelected()) {
+		writeHex.addActionListener((e) -> {
+			if(writeHex.isSelected()) {
 				data.setWriteType(DataType.HEX);
 			} else {
 				data.setWriteType(DataType.STRING);
 			}
-			inputArea.setType(data.getWriteType());
+			writeArea.setType(data.getWriteType());
 		});
 		listener = (e) -> {
 			Object obj = e.getSource();
@@ -267,8 +328,10 @@ public class Window extends JFrame {
 				Charset c = i.getCharset();
 				data.setCharset(c);
 				table.repaint();
-				inputArea.setCharset(c);
+				writeArea.setCharset(c);
 			}
 		};
 	}
+	
+	
 }

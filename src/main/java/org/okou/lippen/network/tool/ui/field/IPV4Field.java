@@ -36,7 +36,7 @@ import javax.swing.text.PlainDocument;
 /**
  * IPV4µØÖ·ÊäÈë¿ò
  */
-public class JMIPV4AddressField extends JTextField implements Serializable {
+public class IPV4Field extends JTextField implements Serializable {
     private static final Border EMPTY_BORDER     = BorderFactory
                                                          .createEmptyBorder();
     private static final long   serialVersionUID = -2754807884601930339L;
@@ -46,11 +46,11 @@ public class JMIPV4AddressField extends JTextField implements Serializable {
     private JIPV4Field[]        ipFields;
     private KeyAdapter          KeyListener      = new IPKeyAdapter();
 
-    public JMIPV4AddressField() {
+    public IPV4Field() {
         this(null);
     }
 
-    public JMIPV4AddressField(String ipAddress) {
+    public IPV4Field(String ipAddress) {
         setLayout(new GridLayout(1, 4, 0, 0));
         setFocusable(false);
         createIPFields();
@@ -437,23 +437,23 @@ public class JMIPV4AddressField extends JTextField implements Serializable {
             setOpaque(false);
             setIconTextGap(0);
             setFont(new Font(Font.DIALOG, Font.BOLD, 12));
-            setBorder(JMIPV4AddressField.EMPTY_BORDER);
-            setForeground(JMIPV4AddressField.this.getForeground());
-            setEnabled(JMIPV4AddressField.this.isEnabled());
+            setBorder(IPV4Field.EMPTY_BORDER);
+            setForeground(IPV4Field.this.getForeground());
+            setEnabled(IPV4Field.this.isEnabled());
             setHorizontalAlignment(JLabel.CENTER);
         }
 
         @Override
         public void setEnabled(boolean enabled) {
             super.setEnabled(enabled);
-            setForeground(enabled ? JMIPV4AddressField.this.getForeground()
-                    : JMIPV4AddressField.this.getDisabledTextColor());
+            setForeground(enabled ? IPV4Field.this.getForeground()
+                    : IPV4Field.this.getDisabledTextColor());
         }
 
         @Override
         public void updateUI() {
             super.updateUI();
-            setFont(JMIPV4AddressField.this.getFont());
+            setFont(IPV4Field.this.getFont());
         }
     }
 
@@ -465,18 +465,18 @@ public class JMIPV4AddressField extends JTextField implements Serializable {
         public JIPV4Field() {
             this.selectAll = true;
             setHorizontalAlignment(0);
-            setBorder(JMIPV4AddressField.EMPTY_BORDER);
+            setBorder(IPV4Field.EMPTY_BORDER);
             setOpaque(false);
             setMargin(new Insets(0, 0, 0, 0));
             setDocument(new IPBlockDocument(this));
-            setFont(JMIPV4AddressField.this.getFont());
-            setSelectionColor(JMIPV4AddressField.this.getSelectionColor());
-            setSelectedTextColor(JMIPV4AddressField.this.getSelectedTextColor());
-            setEditable(JMIPV4AddressField.this.isEditable());
-            setDisabledTextColor(JMIPV4AddressField.this.getDisabledTextColor());
-            setCaretColor(JMIPV4AddressField.this.getCaretColor());
-            setForeground(JMIPV4AddressField.this.getForeground());
-            setEnabled(JMIPV4AddressField.this.isEnabled());
+            setFont(IPV4Field.this.getFont());
+            setSelectionColor(IPV4Field.this.getSelectionColor());
+            setSelectedTextColor(IPV4Field.this.getSelectedTextColor());
+            setEditable(IPV4Field.this.isEditable());
+            setDisabledTextColor(IPV4Field.this.getDisabledTextColor());
+            setCaretColor(IPV4Field.this.getCaretColor());
+            setForeground(IPV4Field.this.getForeground());
+            setEnabled(IPV4Field.this.isEnabled());
             addActionListener(this);
             addFocusListener(this);
         }
@@ -574,11 +574,11 @@ public class JMIPV4AddressField extends JTextField implements Serializable {
     }
 
     private class KeyPressListener implements PropertyChangeListener {
-        private JMIPV4AddressField.JIPV4Field leftField;
-        private JMIPV4AddressField.JIPV4Field rightField;
+        private IPV4Field.JIPV4Field leftField;
+        private IPV4Field.JIPV4Field rightField;
 
-        public KeyPressListener(JMIPV4AddressField.JIPV4Field leftField,
-                JMIPV4AddressField.JIPV4Field rightField) {
+        public KeyPressListener(IPV4Field.JIPV4Field leftField,
+                IPV4Field.JIPV4Field rightField) {
             this.leftField = leftField;
             this.rightField = rightField;
         }
@@ -626,19 +626,21 @@ public class JMIPV4AddressField extends JTextField implements Serializable {
                     && (caretPos == textLength) && (selText == null)) {
                 field.firePropertyChange("Delete", 0, 1);
             } else if (keyCode == KeyEvent.VK_HOME) {
-                JMIPV4AddressField.this.ipFields[0].unSelectAllWhenFocusGained();
-                JMIPV4AddressField.this.ipFields[0].requestFocus();
-                JMIPV4AddressField.this.ipFields[0].setCaretPosition(0);
+                IPV4Field.this.ipFields[0].unSelectAllWhenFocusGained();
+                IPV4Field.this.ipFields[0].requestFocus();
+                IPV4Field.this.ipFields[0].setCaretPosition(0);
             } else if (keyCode == KeyEvent.VK_END) {
-                int last = JMIPV4AddressField.this.ipFields.length - 1;
-                textLength = JMIPV4AddressField.this.ipFields[last].getText()
+                int last = IPV4Field.this.ipFields.length - 1;
+                textLength = IPV4Field.this.ipFields[last].getText()
                         .length();
-                JMIPV4AddressField.this.ipFields[last]
+                IPV4Field.this.ipFields[last]
                         .unSelectAllWhenFocusGained();
-                JMIPV4AddressField.this.ipFields[last].requestFocus();
-                JMIPV4AddressField.this.ipFields[last]
+                IPV4Field.this.ipFields[last].requestFocus();
+                IPV4Field.this.ipFields[last]
                         .setCaretPosition(textLength);
-            } else if (("0123456789".indexOf(keyChar) >= 0)) {
+            } else if ((keyCode == KeyEvent.VK_0 || keyCode == KeyEvent.VK_NUMPAD0) && (caretPos == 0 || (text != null && text.equals(selText)))) {
+                field.firePropertyChange("Right", 0, 1);
+            }  else if (("0123456789".indexOf(keyChar) >= 0)) {
                 if (selText == null) {
                     int ipInt = (text.length() == 0 ? 0 : Integer
                             .parseInt(text));
@@ -657,7 +659,7 @@ public class JMIPV4AddressField extends JTextField implements Serializable {
     };
 
     public static void main(String[] args) {
-        JMIPV4AddressField ipFiled = new JMIPV4AddressField();
+        IPV4Field ipFiled = new IPV4Field();
         ipFiled.setIpAddress("192.168.131.1");
         //ipFiled.setIpValue(12345);
         JPanel pl = new JPanel();
