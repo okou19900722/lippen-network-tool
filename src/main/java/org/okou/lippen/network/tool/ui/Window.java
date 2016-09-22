@@ -8,11 +8,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -21,6 +25,7 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -34,7 +39,6 @@ import org.okou.lippen.network.tool.ui.field.DataTextArea;
 import org.okou.lippen.network.tool.ui.field.IPV4Field;
 import org.okou.lippen.network.tool.ui.field.PortField;
 import org.okou.lippen.network.tool.ui.menu.CharsetCheckBoxMenuItem;
-import org.okou.lippen.network.tool.ui.model.ChannelListModel;
 import org.okou.lippen.network.tool.ui.select.NetSelect;
 import org.okou.lippen.network.tool.ui.table.ReadOnlyTable;
 import org.okou.lippen.network.tool.util.NetUtil;
@@ -77,6 +81,8 @@ public class Window extends JFrame {
 	private JCheckBox writeHex;
 	//发送完信息之后清空
 	private JCheckBox writeClear;
+	//使用列表选择项发送数据
+	private JCheckBox writeToListSelect;
 	
 	//绑定按钮
 	private JButton bindButton;
@@ -173,7 +179,8 @@ public class Window extends JFrame {
 		readHex = new JCheckBox("十六进制显示");
 		
 		writeHex = new JCheckBox("十六进制显示");
-		writeClear = new JCheckBox("发送完自动清空");
+		writeClear = new JCheckBox("发完清空输入框");
+		writeToListSelect = new JCheckBox("发给选中的连接");
 		
 		table = new ReadOnlyTable(data);
 		JScrollPane tableScroll = new JScrollPane(table);
@@ -187,10 +194,34 @@ public class Window extends JFrame {
 		writeArea = new DataTextArea(data.getWriteType(), data.getCharset());
 		sendButton = new JButton("发送");
 		
-		connectList = new JList<>();
-		ChannelListModel model = new ChannelListModel(connectList);
-		connectList.setModel(model);
-		data.setChannelListModel(model);
+		DefaultListModel<Object> model = new DefaultListModel<>();
+		connectList = new JList<>(model);
+//		connectList = new JList<>();
+//		org.okou.lippen.network.tool.ui.model.ChannelListModel model = new org.okou.lippen.network.tool.ui.model.ChannelListModel(connectList);
+//		connectList.setModel(model);
+		BiConsumer<Object, String> consumer = (connect, action) -> {
+			switch(action) {
+			case "clear" :
+				model.removeAllElements();
+				break;
+			case "add" :
+				boolean has = false;
+				for(int i = 0; i < model.getSize(); i++) {
+					has = connect.equals(model.getElementAt(i));
+					if(has) {
+						break;
+					}
+				}
+				if(!has) {
+					model.addElement(connect);
+				}
+				break;
+			case "remove" :
+				model.removeElement(connect);
+				break;
+			}
+		};
+		data.setConsumer(consumer);
 		
 		JPanel targetPanel = new JPanel();
 //		targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
@@ -240,6 +271,7 @@ public class Window extends JFrame {
 		writeSettingPanel.setLayout(new BoxLayout(writeSettingPanel, BoxLayout.Y_AXIS));
 		writeSettingPanel.add(writeHex);
 		writeSettingPanel.add(writeClear);
+		writeSettingPanel.add(writeToListSelect);
 		
 		//左半边面板
 		JPanel leftPanel = new JPanel();
@@ -265,9 +297,18 @@ public class Window extends JFrame {
 		popup = new JPopupMenu();
 		JMenuItem removeItem = new JMenuItem("删除");
 		JMenuItem clearItem = new JMenuItem("清空");
+		JMenuItem testItem = new JMenuItem("测试");
+		testItem.addActionListener((e) -> {
+			connectList.repaint();
+//			connectList.setSelectedIndex(0);
+			Object o = connectList.getSelectedValue();
+			System.out.println(o);
+//			System.out.println("num:" + connectList.getModel().getSize());
+		});
 		removeItem.addActionListener((e) -> {
 			Object obj = connectList.getSelectedValue();
-			data.removeConnect(obj);
+			model.removeElement(obj);
+//			data.removeConnect(obj);
 			
 		});
 		clearItem.addActionListener((e) -> {
@@ -275,6 +316,8 @@ public class Window extends JFrame {
 		});
 		popup.add(removeItem);
 		popup.add(clearItem);
+		popup.addSeparator();
+		popup.add(testItem);
 		JScrollPane listScroll = new JScrollPane(connectList);
 		Dimension old = listScroll.getPreferredSize();
 		listScroll.setPreferredSize(new Dimension(108, old.height));
@@ -282,15 +325,34 @@ public class Window extends JFrame {
 	}
 	
 	public void addListener(){
+		//鼠标事件，左右键都会选中鼠标当前列
 		MouseListener mouseListener = new MouseAdapter() {  
 		    @Override  
 		    public void mouseClicked(MouseEvent e) {  
 		        int index = connectList.locationToIndex(e.getPoint());  
 		        connectList.setSelectedIndex(index);  
 		    }  
-		};  
+		};
 		connectList.addMouseListener(mouseListener);
 		
+		
+		Supplier<InetSocketAddress> addressSource = () -> {
+			String udpIP = targetIp.getText();
+			if(udpIP == null) {
+				JOptionPane.showMessageDialog(null, "UDP客户端信息未配置", "UDP", JOptionPane.OK_OPTION);
+				return null;
+			}
+			int udpPort = this.targetPort.getNumber();
+			return new InetSocketAddress(udpIP, udpPort);
+		};
+		data.setAddressSource(addressSource);
+		writeToListSelect.addActionListener((e) -> {
+			if(writeToListSelect.isSelected()) {
+				data.setAddressSource(null);
+			} else {
+				data.setAddressSource(addressSource);
+			}
+		});
 		data.setChannelSource(() -> {
 			return connectList.getSelectedValuesList();
 		});
@@ -328,6 +390,7 @@ public class Window extends JFrame {
 					if(n.isServer()) {
 						d = max;
 						this.add(connectPanel, BorderLayout.EAST);
+						connectPanel.repaint();
 						if(n.canRemoveClient()) {
 							this.connectList.setComponentPopupMenu(popup);
 						}

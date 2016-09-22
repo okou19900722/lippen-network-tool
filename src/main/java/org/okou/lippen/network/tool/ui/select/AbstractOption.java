@@ -2,24 +2,15 @@ package org.okou.lippen.network.tool.ui.select;
 
 import java.net.SocketAddress;
 
-import io.netty.channel.Channel;
-
-public class AbstractOption {
+public abstract class AbstractOption {
 	@Override
 	public boolean equals(Object obj) {
-		SocketAddress s1 = getAddress(this);
-		SocketAddress s2 = getAddress(obj);
-		return s1 != null && s1.equals(s2);
-	}
-	
-	private SocketAddress getAddress(Object obj){
-		SocketAddress address = null;
-		if(obj instanceof ChannelOption) {
-			Channel channel = ((ChannelOption) obj).getChannel();
-			address = channel.remoteAddress();
-		} else if(obj instanceof INetSocketAddressOption) {
-			address = ((INetSocketAddressOption) obj).getAddress();
+		if(obj instanceof AbstractOption) {
+			SocketAddress s1 = ((AbstractOption) obj).getAddress();
+			SocketAddress s2 = this.getAddress();
+			return s1 != null && s1.equals(s2);
 		}
-		return address;
+		return false;
 	}
+	public abstract SocketAddress getAddress();
 }

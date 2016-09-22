@@ -3,6 +3,7 @@ package org.okou.lippen.network.tool.net;
 import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.util.List;
+import java.util.function.Supplier;
 
 import javax.swing.JOptionPane;
 
@@ -50,17 +51,28 @@ public class NetUDPServer extends AbstractNet {
 	@Override
 	public void sendMsg(String text) {
 		byte[] bytes = msg2Bytes(text);
-		List<Object> connects = data.getConnections();
-		for (Object connect : connects) {
-			if(connect instanceof INetSocketAddressOption) {
-				INetSocketAddressOption net = (INetSocketAddressOption) connect;
-				InetSocketAddress add = net.getAddress();
-				DatagramPacket packet = new DatagramPacket(Unpooled.wrappedBuffer(bytes), add);
-				channel.writeAndFlush(packet);
-			} else {
-				System.err.println("UDP 连接列表里有非UDP连接");
+		Supplier<InetSocketAddress> addressSource = data.getAddressSource();
+		if(addressSource == null) {
+			List<Object> connects = data.getConnections();
+			for (Object connect : connects) {
+				if(connect instanceof INetSocketAddressOption) {
+					INetSocketAddressOption net = (INetSocketAddressOption) connect;
+					InetSocketAddress add = net.getAddress();
+					sendMsg(bytes, add);
+				} else {
+					System.err.println("UDP 连接列表里有非UDP连接");
+				}
+			}
+		} else {
+			InetSocketAddress add = addressSource.get();
+			if(add != null) {
+				sendMsg(bytes, add);
 			}
 		}
+	}
+	private void sendMsg(byte[] bytes, InetSocketAddress add) {
+		DatagramPacket packet = new DatagramPacket(Unpooled.wrappedBuffer(bytes), add);
+		channel.writeAndFlush(packet);
 	}
 	@Override
 	public boolean isServer() {

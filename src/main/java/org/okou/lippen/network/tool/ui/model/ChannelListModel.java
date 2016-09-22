@@ -6,9 +6,6 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.JList;
 
-import org.okou.lippen.network.tool.ui.select.ChannelOption;
-import org.okou.lippen.network.tool.ui.select.INetSocketAddressOption;
-
 @SuppressWarnings("serial")
 public class ChannelListModel extends AbstractListModel<Object>{
 	private List<Object> channelList = new ArrayList<>();
@@ -25,7 +22,7 @@ public class ChannelListModel extends AbstractListModel<Object>{
 	public Object getElementAt(int index) {
 		return channelList.get(index);
 	}
-	public void add(ChannelOption option){
+	public void addElement(Object option){
 		if(channelList.contains(option)) {
 			return;
 		}
@@ -34,24 +31,33 @@ public class ChannelListModel extends AbstractListModel<Object>{
 		list.repaint();
 		fireIntervalAdded(list, channelList.size() - 1, channelList.size() - 1);
 	}
-	public void add(INetSocketAddressOption option){
-		if(channelList.contains(option)) {
-			return;
-		}
-		channelList.add(option);
-		System.out.println("连接，在线:" + channelList.size());
-		list.repaint();
-//		fireIntervalAdded(list, channelList.size(), channelList.size());
-	}
-	public void remove(Object option) {
+//	public void add(ChannelOption option){
+//		if(channelList.contains(option)) {
+//			return;
+//		}
+//		channelList.add(option);
+//		System.out.println("连接，在线:" + channelList.size());
+//		list.repaint();
+//		fireIntervalAdded(list, channelList.size() - 1, channelList.size() - 1);
+//	}
+//	public void addElement(INetSocketAddressOption option){
+//		if(!channelList.contains(option)) {
+//			channelList.add(option);
+//		}
+//		System.out.println("连接，在线:" + channelList.size());
+//		System.out.println(list.getModel().getClass());
+//		list.repaint();
+////		fireIntervalAdded(list, channelList.size(), channelList.size());
+//	}
+	public void removeElement(Object option) {
 		boolean b = channelList.remove(option);
 		System.out.println("离开，在线:" + channelList.size());
 		if(b) {
 			list.repaint();
-//			fireIntervalAdded(list, channelList.size(), channelList.size());
+			fireIntervalAdded(list, channelList.size(), channelList.size());
 		}
 	}
-	public void clear() {
+	public void removeAllElements() {
 		channelList.clear();
 		list.repaint();
 	}

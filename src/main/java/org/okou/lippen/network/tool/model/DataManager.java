@@ -9,9 +9,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import org.okou.lippen.network.tool.ui.model.ChannelListModel;
 import org.okou.lippen.network.tool.ui.select.ChannelOption;
 import org.okou.lippen.network.tool.ui.select.INetSocketAddressOption;
 
@@ -28,11 +28,11 @@ public class DataManager {
 	private Charset charset;
 	private Supplier<List<Object>> channelSource;
 	
+	private Supplier<InetSocketAddress> addressSource;
 	public static enum DataType{
 		HEX, STRING
 	}
-	
-	private ChannelListModel channelListModel;
+	private BiConsumer<Object, String> consumer;
 	
 	public DataManager(Object[][] data, Object[] columnNames){
 		int i = 0;
@@ -102,13 +102,16 @@ public class DataManager {
 		}
 	}
 	public void addConnect(Channel channel){
-		channelListModel.add(new ChannelOption(channel));
+		consumer.accept(new ChannelOption(channel), "add");
 	}
 	public void addConnect(InetSocketAddress address) {
-		channelListModel.add(new INetSocketAddressOption(address));
+		consumer.accept(new INetSocketAddressOption(address), "add");
 	}
-	public void removeConnect(Object channel){
-		channelListModel.remove(channel);
+	public void removeConnect(Channel channel){
+		consumer.accept(new ChannelOption(channel), "remove");
+	}
+	public void removeConnect(InetSocketAddress address){
+		consumer.accept(new INetSocketAddressOption(address), "remove");
 	}
 	public Component getComponent() {
 		return component;
@@ -140,16 +143,19 @@ public class DataManager {
 	public List<Object> getConnections(){
 		return channelSource.get();
 	}
-	public ChannelListModel getChannelListModel() {
-		return channelListModel;
-	}
-	public void setChannelListModel(ChannelListModel channelListModel) {
-		this.channelListModel = channelListModel;
-	}
 	public void clear() {
-		channelListModel.clear();
+		consumer.accept(null, "clear");
 	}
 	public void setChannelSource(Supplier<List<Object>> channelSource) {
 		this.channelSource = channelSource;
+	}
+	public Supplier<InetSocketAddress> getAddressSource() {
+		return addressSource;
+	}
+	public void setAddressSource(Supplier<InetSocketAddress> addressSource) {
+		this.addressSource = addressSource;
+	}
+	public void setConsumer(BiConsumer<Object, String> consumer) {
+		this.consumer = consumer;
 	}
 }

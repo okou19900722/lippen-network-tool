@@ -29,4 +29,9 @@ public class ChannelOption extends AbstractOption{
 		}
 		return address.toString();
 	}
+	
+	@Override
+	public SocketAddress getAddress() {
+		return channel.remoteAddress();
+	}
 }

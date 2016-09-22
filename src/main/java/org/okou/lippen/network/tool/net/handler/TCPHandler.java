@@ -6,7 +6,6 @@ import javax.swing.JOptionPane;
 
 import org.okou.lippen.network.tool.listener.MessageReceivedListener;
 import org.okou.lippen.network.tool.model.DataManager;
-import org.okou.lippen.network.tool.ui.select.ChannelOption;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -32,13 +31,13 @@ public class TCPHandler extends SimpleChannelInboundHandler<ByteBuf>{
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		if(cause instanceof IOException) {
-			data.removeConnect(new ChannelOption(ctx.channel()));
+			data.removeConnect(ctx.channel());
 			return;
 		}
 		JOptionPane.showMessageDialog(data.getComponent(), "服务器异常", "服务器异常", JOptionPane.OK_OPTION);
 	}
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		data.removeConnect(new ChannelOption(ctx.channel()));
+		data.removeConnect(ctx.channel());
 	}
 }
