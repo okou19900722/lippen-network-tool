@@ -11,7 +11,7 @@ public class DataTableModel extends AbstractTableModel{
 	public DataTableModel(DataManager data) {
 		this.data = data;
 	}
-
+	
 	@Override
 	public int getRowCount() {
 		int i = index;
@@ -25,10 +25,14 @@ public class DataTableModel extends AbstractTableModel{
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		return data.getValueAt(rowIndex, columnIndex);
+		int i = index;
+		return data.getValueAt(rowIndex + i, columnIndex);
 	}
 	@Override
 	public String getColumnName(int column) {
 		return data.getColumnName(column);
+	}
+	public void clear(){
+		this.index = data.getRowCount();
 	}
 }

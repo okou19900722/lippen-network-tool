@@ -61,8 +61,4 @@ public class NetTCPServer extends AbstractNetTcp {
 	public boolean isServer() {
 		return true;
 	}
-	@Override
-	public boolean canRemoveClient() {
-		return false;
-	}
 }

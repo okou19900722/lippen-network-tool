@@ -24,7 +24,7 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
 public class NetUDPServer extends AbstractNet {
 	private Bootstrap b;
 	public NetUDPServer(DataManager data, MessageReceivedListener listener) {
-		super(data, "UDP Server");
+		super(data, "UDP");
 		b = new Bootstrap();
 		EventLoopGroup group = new NioEventLoopGroup();
 		b.group(group).channel(NioDatagramChannel.class).option(ChannelOption.SO_BROADCAST, true)
@@ -80,6 +80,10 @@ public class NetUDPServer extends AbstractNet {
 	}
 	@Override
 	public boolean canRemoveClient() {
+		return true;
+	}
+	@Override
+	public boolean needTarget() {
 		return true;
 	}
 }

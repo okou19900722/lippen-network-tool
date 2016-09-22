@@ -29,4 +29,12 @@ public abstract class AbstractNetTcp extends AbstractNet{
 		};
 		this.data = data;
 	}
+	@Override
+	public boolean needTarget() {
+		return false;
+	}
+	@Override
+	public boolean canRemoveClient() {
+		return false;
+	}
 }

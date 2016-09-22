@@ -40,6 +40,7 @@ import org.okou.lippen.network.tool.ui.field.IPV4Field;
 import org.okou.lippen.network.tool.ui.field.PortField;
 import org.okou.lippen.network.tool.ui.menu.CharsetCheckBoxMenuItem;
 import org.okou.lippen.network.tool.ui.select.NetSelect;
+import org.okou.lippen.network.tool.ui.table.DataTableModel;
 import org.okou.lippen.network.tool.ui.table.ReadOnlyTable;
 import org.okou.lippen.network.tool.util.NetUtil;
 
@@ -77,6 +78,7 @@ public class Window extends JFrame {
 	
 	//接收信息列表显示格式
 	private JCheckBox readHex;
+	private JButton clearReadButton;
 	//发送信息框显示格式
 	private JCheckBox writeHex;
 	//发送完信息之后清空
@@ -96,11 +98,13 @@ public class Window extends JFrame {
 	//目标ip和端口输入框
 	private IPV4Field targetIp;
 	private PortField targetPort;
+	//目标面板
+	private JPanel targetPanel;
+	private JPanel p;
 	
 	private JPanel connectPanel;
 	private JList<Object> connectList;
 	private JPopupMenu popup;
-
 	
 	private ActionListener listener;
 
@@ -177,6 +181,7 @@ public class Window extends JFrame {
 		bindButton = new JButton("连接");
 		
 		readHex = new JCheckBox("十六进制显示");
+		clearReadButton = new JButton("清除");
 		
 		writeHex = new JCheckBox("十六进制显示");
 		writeClear = new JCheckBox("发完清空输入框");
@@ -223,7 +228,7 @@ public class Window extends JFrame {
 		};
 		data.setConsumer(consumer);
 		
-		JPanel targetPanel = new JPanel();
+		targetPanel = new JPanel();
 //		targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.X_AXIS));
 		targetPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		targetPanel.add(targetHost);
@@ -241,7 +246,10 @@ public class Window extends JFrame {
 		readPanel.setBorder(BorderFactory.createTitledBorder("接收信息"));
 		readPanel.setLayout(new BoxLayout(readPanel, BoxLayout.Y_AXIS));
 		readPanel.add(tableScroll);
-		readPanel.add(targetPanel);
+		p = new JPanel();
+		p.setLayout(new BorderLayout());
+		p.add(clearReadButton, BorderLayout.EAST);
+		readPanel.add(p);
 		
 		//网络设置面板
 		JPanel netSettingPanel = new JPanel();
@@ -257,14 +265,13 @@ public class Window extends JFrame {
 		
 		JPanel readSettingPanel = new JPanel();
 		readSettingPanel.setBorder(BorderFactory.createTitledBorder("接收设置"));
-		readSettingPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		readSettingPanel.setLayout(new BoxLayout(readSettingPanel, BoxLayout.Y_AXIS));
 		readSettingPanel.add(readHex);
 		
-		
 		JPanel leftUpPanel = new JPanel();
-		leftUpPanel.setLayout(new BoxLayout(leftUpPanel, BoxLayout.Y_AXIS));
-		leftUpPanel.add(netSettingPanel);
-		leftUpPanel.add(readSettingPanel);
+		leftUpPanel.setLayout(new BorderLayout());
+		leftUpPanel.add(netSettingPanel, BorderLayout.NORTH);
+		leftUpPanel.add(readSettingPanel, BorderLayout.SOUTH);
 
 		JPanel writeSettingPanel = new JPanel();
 		writeSettingPanel.setBorder(BorderFactory.createTitledBorder("发送设置"));
@@ -281,6 +288,26 @@ public class Window extends JFrame {
 		leftPanel.add(writeSettingPanel, BorderLayout.SOUTH);
 		//右边面板
 		JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, readPanel, writePanel);
+//		clearReadButton.addActionListener((e) -> {
+//			Point po = splitPanel.location;
+//			System.out.println(po);
+//		});
+//		System.out.println(splitPanel.get);
+		splitPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				System.out.println("==");
+				super.mouseDragged(e);
+				System.out.println("====");
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.out.println("1111");
+				super.mouseClicked(e);
+				System.out.println("2222");
+			}
+		});
+//		splitPanel.resize
 		//显示分隔面板在3/4位置
 		splitPanel.setDividerLocation((this.getHeight() >> 2) * 3);
 		//取消边框
@@ -395,6 +422,9 @@ public class Window extends JFrame {
 							this.connectList.setComponentPopupMenu(popup);
 						}
 					}
+					if(n.needTarget()) {
+						p.add(targetPanel, BorderLayout.WEST);
+					}
 					bindButton.setText("断开");
 					networkSelect.setEnabled(false);
 					ipInput.setEnabled(false);
@@ -408,6 +438,9 @@ public class Window extends JFrame {
 						}
 						d = min;
 						this.remove(connectPanel);
+					}
+					if(n.needTarget()) {
+						p.remove(targetPanel);
 					}
 					bindButton.setText("连接");
 					networkSelect.setEnabled(true);
@@ -446,6 +479,11 @@ public class Window extends JFrame {
 				writeArea.setCharset(c);
 			}
 		};
+		clearReadButton.addActionListener((e) -> {
+			DataTableModel tableModel = (DataTableModel) table.getModel();
+			tableModel.clear();
+			table.repaint();
+		});
 	}
 	
 	

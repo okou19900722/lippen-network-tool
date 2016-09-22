@@ -6,4 +6,5 @@ public interface INet {
 	public void sendMsg(String text);
 	public boolean isServer();
 	public boolean canRemoveClient();
+	public boolean needTarget();
 }
