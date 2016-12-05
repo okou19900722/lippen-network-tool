@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.ui.table;
+﻿package org.okou.lippen.network.tool.ui.table;
 
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;

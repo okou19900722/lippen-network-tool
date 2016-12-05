@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.ui.field;
+锘縫ackage org.okou.lippen.network.tool.ui.field;
 
 import java.nio.charset.Charset;
 
@@ -52,7 +52,7 @@ public class DataTextArea extends JTextArea {
 	}
 	public void setCharset(Charset charset) {
 		if(type == DataType.HEX) {
-			//如果显示的是16进制，那么设置编码的时候，需要按原编码转为字符串，然后再按新编码计算字节数组
+			//濡傛灉鏄剧ず鐨勬槸16杩涘埗锛岄偅涔堣缃紪鐮佺殑鏃跺�欙紝闇�瑕佹寜鍘熺紪鐮佽浆涓哄瓧绗︿覆锛岀劧鍚庡啀鎸夋柊缂栫爜璁＄畻瀛楄妭鏁扮粍
 			String str = DataFormatUtil.hexToStr(getText(), this.charset);
 			setText(DataFormatUtil.strToHex(str, charset));
 		}

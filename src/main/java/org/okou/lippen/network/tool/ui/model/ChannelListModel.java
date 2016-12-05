@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.ui.model;
+ï»¿package org.okou.lippen.network.tool.ui.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,17 +26,17 @@ public class ChannelListModel extends AbstractListModel<Object>{
 		if(channelList.contains(option)) {
 			return;
 		}
+		int index = channelList.size();
 		channelList.add(option);
-		System.out.println("Á¬½Ó£¬ÔÚÏß:" + channelList.size());
-		list.repaint();
-		fireIntervalAdded(list, channelList.size() - 1, channelList.size() - 1);
+		System.out.println("è¿žæŽ¥ï¼Œåœ¨çº¿:" + channelList.size());
+		fireIntervalAdded(list, index, index);
 	}
 //	public void add(ChannelOption option){
 //		if(channelList.contains(option)) {
 //			return;
 //		}
 //		channelList.add(option);
-//		System.out.println("Á¬½Ó£¬ÔÚÏß:" + channelList.size());
+//		System.out.println("è¿žæŽ¥ï¼Œåœ¨çº¿:" + channelList.size());
 //		list.repaint();
 //		fireIntervalAdded(list, channelList.size() - 1, channelList.size() - 1);
 //	}
@@ -44,21 +44,22 @@ public class ChannelListModel extends AbstractListModel<Object>{
 //		if(!channelList.contains(option)) {
 //			channelList.add(option);
 //		}
-//		System.out.println("Á¬½Ó£¬ÔÚÏß:" + channelList.size());
+//		System.out.println("è¿žæŽ¥ï¼Œåœ¨çº¿:" + channelList.size());
 //		System.out.println(list.getModel().getClass());
 //		list.repaint();
 ////		fireIntervalAdded(list, channelList.size(), channelList.size());
 //	}
 	public void removeElement(Object option) {
 		boolean b = channelList.remove(option);
-		System.out.println("Àë¿ª£¬ÔÚÏß:" + channelList.size());
+		System.out.println("ç¦»å¼€ï¼Œåœ¨çº¿:" + channelList.size());
+		int index = channelList.size();
 		if(b) {
-			list.repaint();
-			fireIntervalAdded(list, channelList.size(), channelList.size());
+			fireIntervalAdded(list, index, index);
 		}
 	}
 	public void removeAllElements() {
+		int index = channelList.size();
 		channelList.clear();
-		list.repaint();
+		fireIntervalRemoved(list, index, index);
 	}
 }

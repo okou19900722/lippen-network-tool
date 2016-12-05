@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.net;
+﻿package org.okou.lippen.network.tool.net;
 
 import javax.swing.JOptionPane;
 
@@ -35,7 +35,7 @@ public abstract class AbstractNet implements INet{
 		try {
 			channel.close().sync();
 		} catch (InterruptedException e) {
-			JOptionPane.showMessageDialog(null, "ֹͣ�쳣", "ֹͣ�쳣", JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null, "停止异常", "停止异常", JOptionPane.OK_OPTION);
 			return false;
 		}
 		channel = null;

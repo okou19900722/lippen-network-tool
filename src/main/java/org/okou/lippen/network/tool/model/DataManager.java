@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.model;
+ï»¿package org.okou.lippen.network.tool.model;
 
 import java.awt.Component;
 import java.net.InetSocketAddress;
@@ -98,7 +98,7 @@ public class DataManager {
 	}
 	private void check(Object[] d){
 		if(d.length != columnNames.size()) {
-			throw new RuntimeException("Êı¾İ³¤¶ÈÓëÁĞ³¤¶È²»ÏàÍ¬!");
+			throw new RuntimeException("æ•°æ®é•¿åº¦ä¸åˆ—é•¿åº¦ä¸ç›¸åŒ!");
 		}
 	}
 	public void addConnect(Channel channel){

@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.main;
+ï»¿package org.okou.lippen.network.tool.main;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -8,7 +8,7 @@ import org.okou.lippen.network.tool.ui.Window;
 public class NetWorkTool {
 	
 	public static void main(String[] args) {
-		//ÊäÈëÖĞÎÄµÄÊ±ºò£¬²»»áÏÔÊ¾¸¡¶¯¿ò¡£Èç¹ûĞèÒª
+		//è¾“å…¥ä¸­æ–‡çš„æ—¶å€™ï¼Œä¸ä¼šæ˜¾ç¤ºæµ®åŠ¨æ¡†ã€‚å¦‚æœéœ€è¦
 //		System.setProperty("java.awt.im.style","on-the-spot");
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

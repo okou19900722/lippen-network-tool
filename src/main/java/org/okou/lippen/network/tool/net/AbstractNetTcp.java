@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.net;
+﻿package org.okou.lippen.network.tool.net;
 
 import org.okou.lippen.network.tool.listener.MessageReceivedListener;
 import org.okou.lippen.network.tool.model.DataManager;

@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.ui.select;
+ï»¿package org.okou.lippen.network.tool.ui.select;
 
 import javax.swing.JComboBox;
 
@@ -12,11 +12,11 @@ import org.okou.lippen.network.tool.net.NetUDPServer;
 @SuppressWarnings("serial")
 public class NetSelect extends JComboBox<INet> {
 	public NetSelect(DataManager data) {
-		//Êı¾İ¼àÌıÆ÷£¬ÔÚÊÕµ½Êı¾İÖ®ºó£¬Ìí¼Óµ½Êı¾İÖĞĞÄ
+		//æ•°æ®ç›‘å¬å™¨ï¼Œåœ¨æ”¶åˆ°æ•°æ®ä¹‹åï¼Œæ·»åŠ åˆ°æ•°æ®ä¸­å¿ƒ
 		MessageReceivedListener messageReceived = (bytes) -> {
 			data.addMessage(bytes);;
 		};
-		// ÍøÂçÀàĞÍ¼¯ºÏ
+		// ç½‘ç»œç±»å‹é›†åˆ
 		addItem(new NetTCPServer(data, messageReceived));
 		addItem(new NetTCPClient(data, messageReceived));
 		addItem(new NetUDPServer(data, messageReceived));

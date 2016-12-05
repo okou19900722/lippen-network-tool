@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.net;
+ï»¿package org.okou.lippen.network.tool.net;
 
 import java.net.BindException;
 import java.net.InetSocketAddress;
@@ -37,11 +37,11 @@ public class NetUDPServer extends AbstractNet {
 			ChannelFuture f = b.bind(ip, port).sync();
 			channel = f.channel();
 		} catch (InterruptedException e) {
-			JOptionPane.showMessageDialog(null, "·şÎñÆ÷Òì³£", "·şÎñÆ÷Òì³£", JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null, "æœåŠ¡å™¨å¼‚å¸¸", "æœåŠ¡å™¨å¼‚å¸¸", JOptionPane.OK_OPTION);
 			return false;
 		} catch (Exception e) {
 			if(e instanceof BindException) {
-				JOptionPane.showMessageDialog(null, "¶Ë¿Ú[" + port + "]ÒÑ¾­±»Õ¼ÓÃ", "²ÎÊıÒì³£", JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(null, "ç«¯å£[" + port + "]å·²ç»è¢«å ç”¨", "å‚æ•°å¼‚å¸¸", JOptionPane.OK_OPTION);
 			}
 			return false;
 		} 
@@ -60,7 +60,7 @@ public class NetUDPServer extends AbstractNet {
 					InetSocketAddress add = net.getAddress();
 					sendMsg(bytes, add);
 				} else {
-					System.err.println("UDP Á¬½ÓÁĞ±íÀïÓĞ·ÇUDPÁ¬½Ó");
+					System.err.println("UDP è¿æ¥åˆ—è¡¨é‡Œæœ‰éUDPè¿æ¥");
 				}
 			}
 		} else {

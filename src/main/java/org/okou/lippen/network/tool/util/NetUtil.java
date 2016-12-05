@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.util;
+﻿package org.okou.lippen.network.tool.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

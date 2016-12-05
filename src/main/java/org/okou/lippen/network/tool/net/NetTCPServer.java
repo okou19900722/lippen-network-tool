@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.net;
+ï»¿package org.okou.lippen.network.tool.net;
 
 import java.net.BindException;
 import java.util.List;
@@ -31,11 +31,11 @@ public class NetTCPServer extends AbstractNetTcp {
 			ChannelFuture f = server.bind(ip, port).sync();
 			channel = f.channel();
 		} catch (InterruptedException e) {
-			JOptionPane.showMessageDialog(null, "·şÎñÆ÷Òì³£", "·şÎñÆ÷Òì³£", JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null, "æœåŠ¡å™¨å¼‚å¸¸", "æœåŠ¡å™¨å¼‚å¸¸", JOptionPane.OK_OPTION);
 			return false;
 		} catch (Exception e) {
 			if(e instanceof BindException) {
-				JOptionPane.showMessageDialog(null, "¶Ë¿Ú[" + port + "]ÒÑ¾­±»Õ¼ÓÃ", "²ÎÊıÒì³£", JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(null, "ç«¯å£[" + port + "]å·²ç»è¢«å ç”¨", "å‚æ•°å¼‚å¸¸", JOptionPane.OK_OPTION);
 			}
 			return false;
 		} 
@@ -51,7 +51,7 @@ public class NetTCPServer extends AbstractNetTcp {
 					ChannelOption c = (ChannelOption) obj;
 					c.getChannel().writeAndFlush(bytes);
 				} else {
-					System.err.println("TCP Á¬½ÓÁĞ±íÖĞÓĞ·ÇTCPÁ¬½Ó" + obj);
+					System.err.println("TCP è¿æ¥åˆ—è¡¨ä¸­æœ‰éTCPè¿æ¥" + obj);
 				}
 			}
 		}

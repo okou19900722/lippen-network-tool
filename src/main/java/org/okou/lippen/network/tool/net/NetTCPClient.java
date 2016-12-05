@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.net;
+ï»¿package org.okou.lippen.network.tool.net;
 
 import javax.swing.JOptionPane;
 
@@ -27,7 +27,7 @@ public class NetTCPClient extends AbstractNetTcp {
 			ChannelFuture f = client.connect(ip, port).sync();
 			channel = f.channel();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Á¬½ÓÊ§°Ü", "Á¬½ÓÊ§°Ü", JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null, "è¿æ¥å¤±è´¥", "è¿æ¥å¤±è´¥", JOptionPane.OK_OPTION);
 			return false;
 		}
 		return true;
@@ -36,7 +36,7 @@ public class NetTCPClient extends AbstractNetTcp {
 	@Override
 	public void sendMsg(String text) {
 		if(channel == null) {
-			JOptionPane.showMessageDialog(null, "Î´½¨Á¢Á¬½Ó", "·¢ËÍÒì³£", JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null, "æœªå»ºç«‹è¿æ¥", "å‘é€å¼‚å¸¸", JOptionPane.OK_OPTION);
 			return;
 		}
 		byte[] bytes = msg2Bytes(text);

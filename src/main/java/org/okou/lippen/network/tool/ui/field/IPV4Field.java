@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.ui.field;
+ï»¿package org.okou.lippen.network.tool.ui.field;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -34,7 +34,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.PlainDocument;
 
 /**
- * IPV4µØÖ·ÊäÈë¿ò
+ * IPV4åœ°å€è¾“å…¥æ¡†
  */
 public class IPV4Field extends JTextField implements Serializable {
     private static final Border EMPTY_BORDER     = BorderFactory
@@ -128,8 +128,8 @@ public class IPV4Field extends JTextField implements Serializable {
     }
 
     /**
-     * ÊÇ·ñÊäÈëÍêÕû¡£<br>
-     * Èç¹ûÓĞÒ»¸öÊäÈëÓòÎª¿Õ£¬ÔòÈÏÎªÃ»ÓĞÊäÈëÍêÕû
+     * æ˜¯å¦è¾“å…¥å®Œæ•´ã€‚<br>
+     * å¦‚æœæœ‰ä¸€ä¸ªè¾“å…¥åŸŸä¸ºç©ºï¼Œåˆ™è®¤ä¸ºæ²¡æœ‰è¾“å…¥å®Œæ•´
      */
     public boolean isInputAll() {
         if (this.ipFields != null) {
@@ -344,7 +344,7 @@ public class IPV4Field extends JTextField implements Serializable {
     }
 
     /**
-     * ÒÑÕûÊıĞÎÊ½ÉèÖÃIPµØÖ·
+     * å·²æ•´æ•°å½¢å¼è®¾ç½®IPåœ°å€
      * 
      * @param ip
      */
@@ -353,7 +353,7 @@ public class IPV4Field extends JTextField implements Serializable {
     }
 
     /**
-     * »ñÈ¡IPµØÖ·µÄÕûÊı
+     * è·å–IPåœ°å€çš„æ•´æ•°
      * 
      * @return
      */
@@ -367,7 +367,7 @@ public class IPV4Field extends JTextField implements Serializable {
     }
 
     /**
-     * Çå¿ÕIPµØÖ·
+     * æ¸…ç©ºIPåœ°å€
      */
     public void clearIPAddress() {
         if (this.ipFields != null) {
@@ -506,7 +506,7 @@ public class IPV4Field extends JTextField implements Serializable {
         }
 
         /**
-         * »ñÈ¡Öµ
+         * è·å–å€¼
          * 
          * @return
          */

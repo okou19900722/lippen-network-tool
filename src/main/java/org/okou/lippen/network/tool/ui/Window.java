@@ -46,7 +46,7 @@ import org.okou.lippen.network.tool.util.NetUtil;
 
 @SuppressWarnings("serial")
 public class Window extends JFrame {
-	//±àÂë¸ñÊ½
+	//ç¼–ç æ ¼å¼
 	private static final String[][] charsets = new String[][] {
 		{"ISO-8859-1", "ISO-8859-1"},
 		{"UTF-8", "UTF-8"},
@@ -62,43 +62,43 @@ public class Window extends JFrame {
 		{"UTF-32BE", "UTF-32BE"},
 		{"UTF-32LE", "UTF-32LE"},
 	};
-	//±¾µØip
+	//æœ¬åœ°ip
 	private static final String LOCAL_IP = NetUtil.getLocalHostName();
 	
-	//Êı¾İÖĞĞÄ
+	//æ•°æ®ä¸­å¿ƒ
 	private DataManager data;
-	//ÍøÂçÀàĞÍÑ¡Ôñ¿ò
+	//ç½‘ç»œç±»å‹é€‰æ‹©æ¡†
 	private NetSelect networkSelect;
-	//ipºÍ¶Ë¿ÚÏÔÊ¾Ãæ°å
+	//ipå’Œç«¯å£æ˜¾ç¤ºé¢æ¿
 	private JLabel ipLabel;
 	private JLabel portLabel;
-	//ipºÍ¶Ë¿ÚÊäÈë¿ò
+	//ipå’Œç«¯å£è¾“å…¥æ¡†
 	private IPV4Field ipInput;
 	private PortField portInput;
 	
-	//½ÓÊÕĞÅÏ¢ÁĞ±íÏÔÊ¾¸ñÊ½
+	//æ¥æ”¶ä¿¡æ¯åˆ—è¡¨æ˜¾ç¤ºæ ¼å¼
 	private JCheckBox readHex;
 	private JButton clearReadButton;
-	//·¢ËÍĞÅÏ¢¿òÏÔÊ¾¸ñÊ½
+	//å‘é€ä¿¡æ¯æ¡†æ˜¾ç¤ºæ ¼å¼
 	private JCheckBox writeHex;
-	//·¢ËÍÍêĞÅÏ¢Ö®ºóÇå¿Õ
+	//å‘é€å®Œä¿¡æ¯ä¹‹åæ¸…ç©º
 	private JCheckBox writeClear;
-	//Ê¹ÓÃÁĞ±íÑ¡ÔñÏî·¢ËÍÊı¾İ
+	//ä½¿ç”¨åˆ—è¡¨é€‰æ‹©é¡¹å‘é€æ•°æ®
 	private JCheckBox writeToListSelect;
 	
-	//°ó¶¨°´Å¥
+	//ç»‘å®šæŒ‰é’®
 	private JButton bindButton;
-	//ÏûÏ¢·¢ËÍ°´Å¥
+	//æ¶ˆæ¯å‘é€æŒ‰é’®
 	private JButton sendButton;
-	//ÏûÏ¢ÊäÈë¿ò
+	//æ¶ˆæ¯è¾“å…¥æ¡†
 	private DataTextArea writeArea;
-	//½ÓÊÕÏûÏ¢ÏÔÊ¾¿ò
+	//æ¥æ”¶æ¶ˆæ¯æ˜¾ç¤ºæ¡†
 	private JTable table;
 	
-	//Ä¿±êipºÍ¶Ë¿ÚÊäÈë¿ò
+	//ç›®æ ‡ipå’Œç«¯å£è¾“å…¥æ¡†
 	private IPV4Field targetIp;
 	private PortField targetPort;
-	//Ä¿±êÃæ°å
+	//ç›®æ ‡é¢æ¿
 	private JPanel targetPanel;
 	private JPanel p;
 	
@@ -131,9 +131,9 @@ public class Window extends JFrame {
 	private void initMenu() {
 		JMenuBar menuBar = new JMenuBar();
 
-		JMenu menu = new JMenu("ÉèÖÃ(O)");
+		JMenu menu = new JMenu("è®¾ç½®(O)");
 		menu.setMnemonic('O');
-		JMenu m = new JMenu("±àÂëÉèÖÃ(E)");
+		JMenu m = new JMenu("ç¼–ç è®¾ç½®(E)");
 		ButtonGroup group = new ButtonGroup();
 		for(String[] charset:charsets) {
 			if(charset.length == 0) {
@@ -150,7 +150,7 @@ public class Window extends JFrame {
 		}
 		menu.add(m);
 		
-		JMenu about = new JMenu("¹ØÓÚ");
+		JMenu about = new JMenu("å…³äº");
 
 		menuBar.add(menu);
 		menuBar.add(about);
@@ -159,45 +159,45 @@ public class Window extends JFrame {
 	}
 
 	private void initComponent() {
-		//³õÊ¼»¯Êı¾İÖĞĞÄ
-		Object[] columnNames = new Object[]{"Ê±¼ä", "Êı¾İ"};
+		//åˆå§‹åŒ–æ•°æ®ä¸­å¿ƒ
+		Object[] columnNames = new Object[]{"æ—¶é—´", "æ•°æ®"};
 		Object[][] rowData = new Object[][]{};
 		data = new DataManager(rowData, columnNames); 
 		data.setCharset(DEFAULT_CHARSET);
 		
-		//-------------³õÊ¼»¯¿Ø¼ş-------------
-		JLabel networkTypeLabel = new JLabel("£¨1£©Ğ­ÒéÀàĞÍ");
-		//ÍøÂçÀàĞÍÑ¡Ôñ¿ò
+		//-------------åˆå§‹åŒ–æ§ä»¶-------------
+		JLabel networkTypeLabel = new JLabel("ï¼ˆ1ï¼‰åè®®ç±»å‹");
+		//ç½‘ç»œç±»å‹é€‰æ‹©æ¡†
 		networkSelect = new NetSelect(data);
 		
-		ipLabel = new JLabel("£¨2£©±¾µØipµØÖ·");
-		//ipµØÖ·ÊäÈë¿ò
+		ipLabel = new JLabel("ï¼ˆ2ï¼‰æœ¬åœ°ipåœ°å€");
+		//ipåœ°å€è¾“å…¥æ¡†
 		ipInput = new IPV4Field(LOCAL_IP);
 		
-		portLabel = new JLabel("£¨3£©±¾µØ¶Ë¿Ú");
-		//¶Ë¿ÚÊäÈë¿ò
+		portLabel = new JLabel("ï¼ˆ3ï¼‰æœ¬åœ°ç«¯å£");
+		//ç«¯å£è¾“å…¥æ¡†
 		portInput = new PortField(8080);
 		
-		bindButton = new JButton("Á¬½Ó");
+		bindButton = new JButton("è¿æ¥");
 		
-		readHex = new JCheckBox("Ê®Áù½øÖÆÏÔÊ¾");
-		clearReadButton = new JButton("Çå³ı");
+		readHex = new JCheckBox("åå…­è¿›åˆ¶æ˜¾ç¤º");
+		clearReadButton = new JButton("æ¸…é™¤");
 		
-		writeHex = new JCheckBox("Ê®Áù½øÖÆÏÔÊ¾");
-		writeClear = new JCheckBox("·¢ÍêÇå¿ÕÊäÈë¿ò");
-		writeToListSelect = new JCheckBox("·¢¸øÑ¡ÖĞµÄÁ¬½Ó");
+		writeHex = new JCheckBox("åå…­è¿›åˆ¶æ˜¾ç¤º");
+		writeClear = new JCheckBox("å‘å®Œæ¸…ç©ºè¾“å…¥æ¡†");
+		writeToListSelect = new JCheckBox("å‘ç»™é€‰ä¸­çš„è¿æ¥");
 		
 		table = new ReadOnlyTable(data);
 		JScrollPane tableScroll = new JScrollPane(table);
 		
-		JLabel targetHost = new JLabel("Ä¿±êÖ÷»ú");
+		JLabel targetHost = new JLabel("ç›®æ ‡ä¸»æœº");
 		targetIp = new IPV4Field(LOCAL_IP);
-		JLabel targetPortLabel = new JLabel("Ä¿±ê¶Ë¿Ú");
+		JLabel targetPortLabel = new JLabel("ç›®æ ‡ç«¯å£");
 		targetPort = new PortField(7000);
 		
-		//ÏûÏ¢·¢ËÍ¿ò
+		//æ¶ˆæ¯å‘é€æ¡†
 		writeArea = new DataTextArea(data.getWriteType(), data.getCharset());
-		sendButton = new JButton("·¢ËÍ");
+		sendButton = new JButton("å‘é€");
 		
 		DefaultListModel<Object> model = new DefaultListModel<>();
 		connectList = new JList<>(model);
@@ -237,13 +237,13 @@ public class Window extends JFrame {
 		targetPanel.add(targetPort);
 		
 		JPanel writePanel = new JPanel();
-		writePanel.setBorder(BorderFactory.createTitledBorder("·¢ËÍĞÅÏ¢"));
+		writePanel.setBorder(BorderFactory.createTitledBorder("å‘é€ä¿¡æ¯"));
 		writePanel.setLayout(new BorderLayout());
 		writePanel.add(new JScrollPane(writeArea), BorderLayout.CENTER);
 		writePanel.add(sendButton, BorderLayout.EAST);
 		
 		JPanel readPanel = new JPanel();
-		readPanel.setBorder(BorderFactory.createTitledBorder("½ÓÊÕĞÅÏ¢"));
+		readPanel.setBorder(BorderFactory.createTitledBorder("æ¥æ”¶ä¿¡æ¯"));
 		readPanel.setLayout(new BoxLayout(readPanel, BoxLayout.Y_AXIS));
 		readPanel.add(tableScroll);
 		p = new JPanel();
@@ -251,9 +251,9 @@ public class Window extends JFrame {
 		p.add(clearReadButton, BorderLayout.EAST);
 		readPanel.add(p);
 		
-		//ÍøÂçÉèÖÃÃæ°å
+		//ç½‘ç»œè®¾ç½®é¢æ¿
 		JPanel netSettingPanel = new JPanel();
-		netSettingPanel.setBorder(BorderFactory.createTitledBorder("ÍøÂçÉèÖÃ"));
+		netSettingPanel.setBorder(BorderFactory.createTitledBorder("ç½‘ç»œè®¾ç½®"));
 		netSettingPanel.setLayout(new GridLayout(7, 1));
 		netSettingPanel.add(networkTypeLabel);
 		netSettingPanel.add(networkSelect);
@@ -264,7 +264,7 @@ public class Window extends JFrame {
 		netSettingPanel.add(bindButton);
 		
 		JPanel readSettingPanel = new JPanel();
-		readSettingPanel.setBorder(BorderFactory.createTitledBorder("½ÓÊÕÉèÖÃ"));
+		readSettingPanel.setBorder(BorderFactory.createTitledBorder("æ¥æ”¶è®¾ç½®"));
 		readSettingPanel.setLayout(new BoxLayout(readSettingPanel, BoxLayout.Y_AXIS));
 		readSettingPanel.add(readHex);
 		
@@ -274,19 +274,19 @@ public class Window extends JFrame {
 		leftUpPanel.add(readSettingPanel, BorderLayout.SOUTH);
 
 		JPanel writeSettingPanel = new JPanel();
-		writeSettingPanel.setBorder(BorderFactory.createTitledBorder("·¢ËÍÉèÖÃ"));
+		writeSettingPanel.setBorder(BorderFactory.createTitledBorder("å‘é€è®¾ç½®"));
 		writeSettingPanel.setLayout(new BoxLayout(writeSettingPanel, BoxLayout.Y_AXIS));
 		writeSettingPanel.add(writeHex);
 		writeSettingPanel.add(writeClear);
 		writeSettingPanel.add(writeToListSelect);
 		
-		//×ó°ë±ßÃæ°å
+		//å·¦åŠè¾¹é¢æ¿
 		JPanel leftPanel = new JPanel();
-		//ÉèÖÃ²¼¾ÖÎªBorderLayout£¬ÕâÑùÔÚµ÷½Ú´°¿Ú´óĞ¡Ê±£¬¶¥²¿²»±ä£¬µ×²¿²»±ä£¬ÖĞ¼äÎª¿Õ°×±ä»¯
+		//è®¾ç½®å¸ƒå±€ä¸ºBorderLayoutï¼Œè¿™æ ·åœ¨è°ƒèŠ‚çª—å£å¤§å°æ—¶ï¼Œé¡¶éƒ¨ä¸å˜ï¼Œåº•éƒ¨ä¸å˜ï¼Œä¸­é—´ä¸ºç©ºç™½å˜åŒ–
 		leftPanel.setLayout(new BorderLayout());
 		leftPanel.add(leftUpPanel, BorderLayout.NORTH);
 		leftPanel.add(writeSettingPanel, BorderLayout.SOUTH);
-		//ÓÒ±ßÃæ°å
+		//å³è¾¹é¢æ¿
 		JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, readPanel, writePanel);
 //		clearReadButton.addActionListener((e) -> {
 //			Point po = splitPanel.location;
@@ -308,9 +308,9 @@ public class Window extends JFrame {
 			}
 		});
 //		splitPanel.resize
-		//ÏÔÊ¾·Ö¸ôÃæ°åÔÚ3/4Î»ÖÃ
+		//æ˜¾ç¤ºåˆ†éš”é¢æ¿åœ¨3/4ä½ç½®
 		splitPanel.setDividerLocation((this.getHeight() >> 2) * 3);
-		//È¡Ïû±ß¿ò
+		//å–æ¶ˆè¾¹æ¡†
 		splitPanel.setBorder(null);
 		
 		this.add(leftPanel, BorderLayout.WEST);
@@ -318,13 +318,13 @@ public class Window extends JFrame {
 		
 		
 		connectPanel = new JPanel();
-		connectPanel.setBorder(BorderFactory.createTitledBorder("Á¬½ÓÁĞ±í"));
+		connectPanel.setBorder(BorderFactory.createTitledBorder("è¿æ¥åˆ—è¡¨"));
 		connectPanel.setLayout(new GridLayout(1, 1));
 		
 		popup = new JPopupMenu();
-		JMenuItem removeItem = new JMenuItem("É¾³ı");
-		JMenuItem clearItem = new JMenuItem("Çå¿Õ");
-		JMenuItem testItem = new JMenuItem("²âÊÔ");
+		JMenuItem removeItem = new JMenuItem("åˆ é™¤");
+		JMenuItem clearItem = new JMenuItem("æ¸…ç©º");
+		JMenuItem testItem = new JMenuItem("æµ‹è¯•");
 		testItem.addActionListener((e) -> {
 			connectList.repaint();
 //			connectList.setSelectedIndex(0);
@@ -352,7 +352,7 @@ public class Window extends JFrame {
 	}
 	
 	public void addListener(){
-		//Êó±êÊÂ¼ş£¬×óÓÒ¼ü¶¼»áÑ¡ÖĞÊó±êµ±Ç°ÁĞ
+		//é¼ æ ‡äº‹ä»¶ï¼Œå·¦å³é”®éƒ½ä¼šé€‰ä¸­é¼ æ ‡å½“å‰åˆ—
 		MouseListener mouseListener = new MouseAdapter() {  
 		    @Override  
 		    public void mouseClicked(MouseEvent e) {  
@@ -366,7 +366,7 @@ public class Window extends JFrame {
 		Supplier<InetSocketAddress> addressSource = () -> {
 			String udpIP = targetIp.getText();
 			if(udpIP == null) {
-				JOptionPane.showMessageDialog(null, "UDP¿Í»§¶ËĞÅÏ¢Î´ÅäÖÃ", "UDP", JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(null, "UDPå®¢æˆ·ç«¯ä¿¡æ¯æœªé…ç½®", "UDP", JOptionPane.OK_OPTION);
 				return null;
 			}
 			int udpPort = this.targetPort.getNumber();
@@ -397,11 +397,11 @@ public class Window extends JFrame {
 		networkSelect.addActionListener((e) -> {
 			INet option = networkSelect.getItemAt(networkSelect.getSelectedIndex());
 			if (!option.isServer()) {
-				ipLabel.setText("£¨2£©·şÎñÆ÷IPµØÖ·");
-				portLabel.setText("£¨3£©·şÎñÆ÷¶Ë¿Ú");
+				ipLabel.setText("ï¼ˆ2ï¼‰æœåŠ¡å™¨IPåœ°å€");
+				portLabel.setText("ï¼ˆ3ï¼‰æœåŠ¡å™¨ç«¯å£");
 			} else {
-				ipLabel.setText("£¨2£©±¾µØipµØÖ·");
-				portLabel.setText("£¨3£©±¾µØ¶Ë¿Ú");
+				ipLabel.setText("ï¼ˆ2ï¼‰æœ¬åœ°ipåœ°å€");
+				portLabel.setText("ï¼ˆ3ï¼‰æœ¬åœ°ç«¯å£");
 			}
 		});
 		bindButton.addActionListener((e) -> {
@@ -412,7 +412,7 @@ public class Window extends JFrame {
 				return;
 			}
 			Dimension d = null;
-			if(bindButton.getText().equals("Á¬½Ó")) {
+			if(bindButton.getText().equals("è¿æ¥")) {
 				if(n.start(ipStr, port)){
 					if(n.isServer()) {
 						d = max;
@@ -425,7 +425,7 @@ public class Window extends JFrame {
 					if(n.needTarget()) {
 						p.add(targetPanel, BorderLayout.WEST);
 					}
-					bindButton.setText("¶Ï¿ª");
+					bindButton.setText("æ–­å¼€");
 					networkSelect.setEnabled(false);
 					ipInput.setEnabled(false);
 					portInput.setEnabled(false);
@@ -442,7 +442,7 @@ public class Window extends JFrame {
 					if(n.needTarget()) {
 						p.remove(targetPanel);
 					}
-					bindButton.setText("Á¬½Ó");
+					bindButton.setText("è¿æ¥");
 					networkSelect.setEnabled(true);
 					ipInput.setEnabled(true);
 					portInput.setEnabled(true);

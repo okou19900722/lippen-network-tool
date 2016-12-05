@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.util;
+ï»¿package org.okou.lippen.network.tool.util;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -53,7 +53,7 @@ public class DataFormatUtil {
 			s = lowerCase == null ? s : lowerCase;
 			Integer val = map.get(s);
 			if(val == null) {
-				throw new RuntimeException("×Ö·û´®[" + s + "]²»ÊÇ×Ö½ÚµÄ16½øÖÆ×Ö·û´®");
+				throw new RuntimeException("å­—ç¬¦ä¸²[" + s + "]ä¸æ˜¯å­—èŠ‚çš„16è¿›åˆ¶å­—ç¬¦ä¸²");
 			}
 			result[i>>1] = val.byteValue();
 		}

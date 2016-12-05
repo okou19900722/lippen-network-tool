@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.net.handler;
+ï»¿package org.okou.lippen.network.tool.net.handler;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ public class TCPHandler extends SimpleChannelInboundHandler<ByteBuf>{
 			data.removeConnect(ctx.channel());
 			return;
 		}
-		JOptionPane.showMessageDialog(data.getComponent(), "·şÎñÆ÷Òì³£", "·şÎñÆ÷Òì³£", JOptionPane.OK_OPTION);
+		JOptionPane.showMessageDialog(data.getComponent(), "æœåŠ¡å™¨å¼‚å¸¸", "æœåŠ¡å™¨å¼‚å¸¸", JOptionPane.OK_OPTION);
 	}
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {

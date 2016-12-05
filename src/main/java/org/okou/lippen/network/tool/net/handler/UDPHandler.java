@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.net.handler;
+ï»¿package org.okou.lippen.network.tool.net.handler;
 
 import javax.swing.JOptionPane;
 
@@ -29,6 +29,6 @@ public class UDPHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 	}
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		JOptionPane.showMessageDialog(data.getComponent(), "·şÎñÆ÷Òì³£", "·şÎñÆ÷Òì³£", JOptionPane.OK_OPTION);
+		JOptionPane.showMessageDialog(data.getComponent(), "æœåŠ¡å™¨å¼‚å¸¸", "æœåŠ¡å™¨å¼‚å¸¸", JOptionPane.OK_OPTION);
 	}
 }

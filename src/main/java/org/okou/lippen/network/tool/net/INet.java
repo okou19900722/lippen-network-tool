@@ -1,4 +1,4 @@
-package org.okou.lippen.network.tool.net;
+﻿package org.okou.lippen.network.tool.net;
 
 public interface INet {
 	public boolean start(String ip, int port);
