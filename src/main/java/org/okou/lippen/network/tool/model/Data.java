@@ -1,4 +1,4 @@
-﻿package org.okou.lippen.network.tool.model;
+package org.okou.lippen.network.tool.model;
 
 import org.okou.lippen.network.tool.util.DataFormatUtil;
 

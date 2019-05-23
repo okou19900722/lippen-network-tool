@@ -1,4 +1,4 @@
-﻿package org.okou.lippen.network.tool.util;
+package org.okou.lippen.network.tool.util;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;

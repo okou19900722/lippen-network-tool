@@ -1,4 +1,4 @@
-﻿package org.okou.lippen.network.tool.ui.menu;
+package org.okou.lippen.network.tool.ui.menu;
 
 import java.nio.charset.Charset;
 

@@ -1,4 +1,4 @@
-﻿package org.okou.lippen.network.tool.ui.model;
+package org.okou.lippen.network.tool.ui.model;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-﻿package org.okou.lippen.network.tool.model;
+package org.okou.lippen.network.tool.model;
 
 import java.awt.Component;
 import java.net.InetSocketAddress;

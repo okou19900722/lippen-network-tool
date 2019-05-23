@@ -1,4 +1,4 @@
-﻿package org.okou.lippen.network.tool.ui.select;
+package org.okou.lippen.network.tool.ui.select;
 
 import javax.swing.JComboBox;
 

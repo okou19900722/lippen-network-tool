@@ -1,4 +1,4 @@
-﻿package org.okou.lippen.network.tool.net;
+package org.okou.lippen.network.tool.net;
 
 import java.net.BindException;
 import java.util.List;

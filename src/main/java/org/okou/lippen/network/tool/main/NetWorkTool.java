@@ -1,4 +1,4 @@
-﻿package org.okou.lippen.network.tool.main;
+package org.okou.lippen.network.tool.main;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;

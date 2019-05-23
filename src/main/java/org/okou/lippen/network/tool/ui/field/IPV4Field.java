@@ -1,4 +1,4 @@
-﻿package org.okou.lippen.network.tool.ui.field;
+package org.okou.lippen.network.tool.ui.field;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
