@@ -37,14 +37,14 @@ import javax.swing.text.PlainDocument;
  * IPV4地址输入框
  */
 public class IPV4Field extends JTextField implements Serializable {
-    private static final Border EMPTY_BORDER     = BorderFactory
-                                                         .createEmptyBorder();
-    private static final long   serialVersionUID = -2754807884601930339L;
+    private static final Border EMPTY_BORDER = BorderFactory
+            .createEmptyBorder();
+    private static final long serialVersionUID = -2754807884601930339L;
 
-    private Dot[]               dots;
+    private Dot[] dots;
 
-    private JIPV4Field[]        ipFields;
-    private KeyAdapter          KeyListener      = new IPKeyAdapter();
+    private JIPV4Field[] ipFields;
+    private KeyAdapter KeyListener = new IPKeyAdapter();
 
     public IPV4Field() {
         this(null);
@@ -299,7 +299,8 @@ public class IPV4Field extends JTextField implements Serializable {
         /*
          * if (this.dots != null) { for (Dot dot : this.dots) {
          * dot.setFont(font); } }
-         */}
+         */
+    }
 
     @Override
     public void setForeground(Color color) {
@@ -345,7 +346,7 @@ public class IPV4Field extends JTextField implements Serializable {
 
     /**
      * 已整数形式设置IP地址
-     * 
+     *
      * @param ip
      */
     public void setIpValue(int ip) {
@@ -354,7 +355,7 @@ public class IPV4Field extends JTextField implements Serializable {
 
     /**
      * 获取IP地址的整数
-     * 
+     *
      * @return
      */
     public int getIPValue() {
@@ -460,7 +461,7 @@ public class IPV4Field extends JTextField implements Serializable {
     private class JIPV4Field extends JTextField implements ActionListener,
             FocusListener, Serializable {
         private static final long serialVersionUID = 1411564647463716520L;
-        private boolean           selectAll;
+        private boolean selectAll;
 
         public JIPV4Field() {
             this.selectAll = true;
@@ -507,7 +508,7 @@ public class IPV4Field extends JTextField implements Serializable {
 
         /**
          * 获取值
-         * 
+         *
          * @return
          */
         public int getIntValue() {
@@ -520,16 +521,16 @@ public class IPV4Field extends JTextField implements Serializable {
 
         private class IPBlockDocument extends PlainDocument {
             private static final long serialVersionUID = -2645957214215338331L;
-            private final Pattern     INT_PATTERN      = Pattern
-                                                               .compile("0|([1-9]\\d*)?");
+            private final Pattern INT_PATTERN = Pattern
+                    .compile("0|([1-9]\\d*)?");
 
-            private int               ipBlockInt;
-            private int               length;
-            private Matcher           matcher;
-            private int               newLength;
-            private int               oldLength;
-            private StringBuilder     text             = new StringBuilder();
-            private JTextField        textField;
+            private int ipBlockInt;
+            private int length;
+            private Matcher matcher;
+            private int newLength;
+            private int oldLength;
+            private StringBuilder text = new StringBuilder();
+            private JTextField textField;
 
             private IPBlockDocument(JTextField textField) {
                 this.textField = textField;
@@ -578,7 +579,7 @@ public class IPV4Field extends JTextField implements Serializable {
         private IPV4Field.JIPV4Field rightField;
 
         public KeyPressListener(IPV4Field.JIPV4Field leftField,
-                IPV4Field.JIPV4Field rightField) {
+                                IPV4Field.JIPV4Field rightField) {
             this.leftField = leftField;
             this.rightField = rightField;
         }
@@ -640,7 +641,7 @@ public class IPV4Field extends JTextField implements Serializable {
                         .setCaretPosition(textLength);
             } else if ((keyCode == KeyEvent.VK_0 || keyCode == KeyEvent.VK_NUMPAD0) && (caretPos == 0 || (text != null && text.equals(selText)))) {
                 field.firePropertyChange("Right", 0, 1);
-            }  else if (("0123456789".indexOf(keyChar) >= 0)) {
+            } else if (("0123456789".indexOf(keyChar) >= 0)) {
                 if (selText == null) {
                     int ipInt = (text.length() == 0 ? 0 : Integer
                             .parseInt(text));
@@ -656,7 +657,9 @@ public class IPV4Field extends JTextField implements Serializable {
                 }
             }
         }
-    };
+    }
+
+    ;
 
     public static void main(String[] args) {
         IPV4Field ipFiled = new IPV4Field();

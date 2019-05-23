@@ -20,3 +20,5 @@ hs_err_pid*
 .settings
 
 /src/test
+
+.idea

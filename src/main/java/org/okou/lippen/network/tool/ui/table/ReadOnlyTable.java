@@ -8,23 +8,23 @@ import org.okou.lippen.network.tool.model.DataManager;
 
 @SuppressWarnings("serial")
 public class ReadOnlyTable extends JTable {
-	public ReadOnlyTable(DataManager data) {
-		super(createTableModel(data));
-		data.setComponent(this);
-		
-		JTableHeader header = this.getTableHeader();
-		setFillsViewportHeight(true);
-		header.getColumnModel().getColumn(0).setMaxWidth(120);
-		header.getColumnModel().getColumn(0).setPreferredWidth(120);
-		
-	}
+    public ReadOnlyTable(DataManager data) {
+        super(createTableModel(data));
+        data.setComponent(this);
 
-	private static TableModel createTableModel(DataManager data) {
-		return new DataTableModel(data);
-	}
+        JTableHeader header = this.getTableHeader();
+        setFillsViewportHeight(true);
+        header.getColumnModel().getColumn(0).setMaxWidth(120);
+        header.getColumnModel().getColumn(0).setPreferredWidth(120);
 
-	@Override
-	public boolean isCellEditable(int row, int column) {
-		return false;
-	}
+    }
+
+    private static TableModel createTableModel(DataManager data) {
+        return new DataTableModel(data);
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return false;
+    }
 }
